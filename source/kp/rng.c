@@ -1,31 +1,67 @@
 #define __KINGPIN_BACKEND
 
 #include <kp/rng.h>
+#include <kp/core.h>
+#include <kp/sha256.h>
 
 typedef struct _kp_rng_state
 {
-    u64 state[8];
+    u8 state[32];
     kp_size index;
 } kp_rng_state;
 
+static kp_rng_state kp_rng;
+
 kp_status kp_library_rng_init(const void *entropy, kp_size entropy_size)
 {
+    kp_rng.index = 0;
+
+    kp_sha256_digest(entropy, entropy_size, kp_rng.state);
+
     return KP_SUCCESS;
 }
 
 void kp_rng_reseed(const void *entropy, kp_size entropy_size)
 {
+    u8 digest[32];
+
+    kp_sha256_digest(entropy, entropy_size, digest);
+
+    for (u8 i = 0; i < 32; i++)
+        kp_rng.state[i] ^= digest[i];
+
+    kp_sha256_digest(kp_rng.state, 32, kp_rng.state);
+
+    kp_rng.index = 0;
+}
+
+void kp_rng_update_state()
+{
+    kp_sha256_digest(kp_rng.state, 32, kp_rng.state);
+    kp_rng.index += 32;
+
+    if (kp_rng.index >= 256)
+    {
+        kp_rng.index = 0;
+        /// TODO: reseed new entropy
+    }
 }
 
 void kp_rng_generate(u8 *buffer, kp_size buffer_size)
 {
-    static u64 rng_state = 0xdeadbeef;
+    kp_size chunks = buffer_size / 32;
+    u8 remainder = buffer_size % 32;
 
-    /// @todo Implement a better RNG
-    for (kp_size i = 0; i < buffer_size; i++)
+    for (kp_size i = 0; i < chunks; i++)
     {
-        rng_state = rng_state * 0x5DEECE66D + 0xB;
-        buffer[i] = rng_state >> 24;
+        kp_rng_update_state();
+        kp_memcpy(buffer + (i * 32), kp_rng.state, 32);
+    }
+
+    if (remainder > 0)
+    {
+        kp_rng_update_state();
+        kp_memcpy(buffer + (chunks * 32), kp_rng.state, remainder);
     }
 }
 
