@@ -40,6 +40,7 @@ extern "C"
 
     typedef struct _kp_ecdh_secret
     {
+        kp_ec_curve curve;
         kp_buffer secret;
     } kp_ecdh_secret;
 
