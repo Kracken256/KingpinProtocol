@@ -2,7 +2,7 @@
 
 #include <kp/rng.h>
 #include <kp/core.h>
-#include <kp/sha256.h>
+#include <kp/checksum.h>
 
 typedef struct _kp_rng_state
 {
