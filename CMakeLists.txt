@@ -13,6 +13,8 @@ set(CMAKE_CXX_FLAGS "-m64 -nostdlib -fno-builtin -Wall -Wextra -Wno-unused-param
 file(GLOB_RECURSE SOURCES source/*.c)
 file (GLOB_RECURSE HEADERS include/*.h)
 
+file(GLOB_RECURSE TEST_SOURCES test/*.c)
+
 include_directories(include)
 
 # Static lib
@@ -20,3 +22,7 @@ add_library(kingpin-static ${SOURCES} ${HEADERS})
 
 # Shared lib
 add_library(kingpin SHARED ${SOURCES} ${HEADERS})
+
+add_executable(test ${TEST_SOURCES} libkingpin-static.a)
+
+target_link_libraries(test kingpin-static)
