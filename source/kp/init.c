@@ -6,6 +6,7 @@
 #include <kp/core.h>
 #include <kp/buffer.h>
 #include <kp/ec.h>
+#include <kp/rng.h>
 
 static boolean kp_dep_check(const kp_dependency *d);
 
@@ -20,6 +21,15 @@ kp_status kp_library_init(const kp_dependency *dependency)
     kp_set_dependency_config(dependency);
 
     if (!kp_library_buffer_init())
+        return KP_INTERNAL_ERROR;
+    
+    u8 entropy[32];
+    kp_size entropy_size = dependency->kp_get_entropy_fn(entropy, 32);
+
+    if (entropy_size != 32)
+        return KP_INTERNAL_ERROR;
+
+    if (!kp_library_rng_init(entropy, entropy_size))
         return KP_INTERNAL_ERROR;
 
     if (!kp_ec_init())
@@ -78,6 +88,12 @@ static boolean kp_dep_check(const kp_dependency *d)
     }
 
     if (d->kp_log_fn == NULL)
+    {
+        status = FALSE;
+        goto exit;
+    }
+
+    if (d->kp_get_entropy_fn == NULL)
     {
         status = FALSE;
         goto exit;
