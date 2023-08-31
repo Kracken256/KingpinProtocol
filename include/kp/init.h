@@ -1,18 +1,22 @@
 #ifndef __KINGPIN_INIT_H_
 #define __KINGPIN_INIT_H_
 
-#include <types/basic.h>
-#include <types/struct.h>
-#include <types/enum.h>
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif // __cplusplus
 
-    kp_status kp_lib_init(kp_dependency *dependency);
+#ifndef __KINGPIN_H_
+#error "Do not include this file directly. Include kingpin.h instead."
+#endif // __KINGPIN_H_
 
-    kp_status kp_lib_deinit(kp_uninit *uninit_mode);
+#include <types/basic.h>
+#include <types/struct.h>
+#include <types/enum.h>
+
+    kp_status kp_library_init(kp_dependency *dependency);
+
+    kp_status kp_library_deinit(kp_uninit *uninit_mode);
 
 #ifdef __cplusplus
 }

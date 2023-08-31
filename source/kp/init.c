@@ -16,7 +16,7 @@ kp_status kp_lib_init(kp_dependency *dependency)
 
     gKP_dependency_config = *dependency;
 
-    return KP_OK;
+    return KP_SUCCESS;
 }
 
 /// @brief Check if the dependency structure is valid.
@@ -81,7 +81,7 @@ exit:
 kp_status kp_lib_deinit(kp_uninit *uninit_mode)
 {
     if (uninit_mode == NULL)
-        return KP_OK;
+        return KP_SUCCESS;
 
-    return KP_OK;
+    return KP_SUCCESS;
 }
