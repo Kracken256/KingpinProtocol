@@ -33,7 +33,7 @@ void kp_rng_generate_buffer(kp_buffer *buffer, kp_size buffer_size)
 {
     kp_buffer_init(buffer);
 
-    buffer->alloc(buffer, NULL, buffer_size);
+    buffer->fn->alloc(buffer, NULL, buffer_size);
 
     kp_rng_generate(buffer->data, buffer_size);
 }

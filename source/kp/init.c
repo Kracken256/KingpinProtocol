@@ -19,7 +19,7 @@ kp_status kp_library_init(const kp_dependency *dependency)
 
     kp_set_dependency_config(dependency);
 
-    if (!kp_lib_buffer_init())
+    if (!kp_library_buffer_init())
         return KP_INTERNAL_ERROR;
 
     if (!kp_ec_init())
@@ -89,8 +89,7 @@ exit:
 
 kp_status kp_library_deinit(const kp_uninit *uninit_mode)
 {
-    if (uninit_mode == NULL)
-        return KP_SUCCESS;
+    kp_library_buffer_deinit();
 
     return KP_SUCCESS;
 }
