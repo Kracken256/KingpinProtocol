@@ -9,7 +9,7 @@ set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "")
 
 find_library(LIBEDDSA_STATIC eddsa-static PATHS /usr/local/lib REQUIRED)
 
-set(CMAKE_CXX_FLAGS "-m64 -std=c99 -nostdlib -fno-builtin -Wall -Wextra -Wno-unused-parameter -I${CMAKE_SOURCE_DIR}/include -O3 -nodefaultlibs -leddsa")
+set(CMAKE_CXX_FLAGS "-m64 -std=c99 -g -nostdlib -fno-builtin -Wall -Wextra -Wno-unused-parameter -I${CMAKE_SOURCE_DIR}/include -O3 -nodefaultlibs -leddsa")
 
 # Sources
 file(GLOB_RECURSE SOURCES source/*.c)
