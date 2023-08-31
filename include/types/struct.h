@@ -26,14 +26,14 @@ extern "C"
         /// @param size The size of the memory to allocate
         /// @return A pointer to the allocated memory
         /// @warning This function is REQUIRED
-        void *(*kp_malloc_fn)(std_size_t size);
+        void *(*kp_malloc_fn)(kp_size size);
 
         /// @brief The function to use for memory reallocation
         /// @param ptr The pointer to the memory to reallocate
         /// @param size The new size of the memory
         /// @return A pointer to the reallocated memory
         /// @warning This function is REQUIRED
-        void *(*kp_realloc_fn)(void *ptr, std_size_t size);
+        void *(*kp_realloc_fn)(void *ptr, kp_size size);
 
         /// @brief The function to use for memory deallocation
         /// @param ptr The pointer to the memory to deallocate
@@ -51,7 +51,7 @@ extern "C"
         /// @param size The size of the memory to copy
         /// @return A pointer to the destination memory
         /// @warning This function is REQUIRED
-        void *(*kp_memcpy_fn)(void *dest, const void *src, std_size_t size);
+        void *(*kp_memcpy_fn)(void *dest, const void *src, kp_size size);
 
         /// @brief The function to use for memory setting
         /// @param dest The destination memory
@@ -59,7 +59,7 @@ extern "C"
         /// @param size The size of the memory to set
         /// @return A pointer to the destination memory
         /// @warning This function is REQUIRED
-        void *(*kp_memset_fn)(void *dest, s32 value, std_size_t size);
+        void *(*kp_memset_fn)(void *dest, s32 value, kp_size size);
 
         /// @brief The function to use for memory comparison
         /// @param dest The destination memory
@@ -67,7 +67,7 @@ extern "C"
         /// @param size The size of the memory to compare
         /// @return A pointer to the destination memory
         /// @warning This function is REQUIRED
-        s32 (*kp_memcmp_fn)(const void *dest, const void *src, std_size_t size);
+        s32 (*kp_memcmp_fn)(const void *dest, const void *src, kp_size size);
 
         /// @brief The function to use for memory moving
         /// @param dest The destination memory
@@ -75,7 +75,7 @@ extern "C"
         /// @param size The size of the memory to move
         /// @return A pointer to the destination memory
         /// @warning This function is REQUIRED
-        void *(*kp_memmove_fn)(void *dest, const void *src, std_size_t size);
+        void *(*kp_memmove_fn)(void *dest, const void *src, kp_size size);
     } kp_dependency;
 
     typedef struct _kp_uninit
@@ -90,11 +90,11 @@ extern "C"
     typedef struct _kp_string
     {
         s8 *data;
-        std_size_t length;
+        kp_size length;
 
-        void (*alloc)(struct _kp_string *string, const s8 *data, std_size_t length);
+        void (*alloc)(struct _kp_string *string, const s8 *data, kp_size length);
         void (*free)(struct _kp_string *string);
-        void (*concat)(struct _kp_string *string, const s8 *data, std_size_t length);
+        void (*concat)(struct _kp_string *string, const s8 *data, kp_size length);
         void (*append)(struct _kp_string *string, s8 c);
         boolean *(*equals)(struct _kp_string *string, const struct _kp_string *other);
     } kp_string;
@@ -106,11 +106,11 @@ extern "C"
     typedef struct _kp_vector
     {
         u8 *data;
-        std_size_t length;
+        kp_size length;
 
-        void (*alloc)(struct _kp_vector *self, const u8 *data, std_size_t length);
+        void (*alloc)(struct _kp_vector *self, const u8 *data, kp_size length);
         void (*free)(struct _kp_vector *self);
-        void (*concat)(struct _kp_vector *self, const u8 *data, std_size_t length);
+        void (*concat)(struct _kp_vector *self, const u8 *data, kp_size length);
         void (*append)(struct _kp_vector *self, u8 c);
         boolean *(*equals)(struct _kp_vector *self, const struct _kp_vector *other);
     } kp_vector;
