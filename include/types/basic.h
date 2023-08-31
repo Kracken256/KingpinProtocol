@@ -20,7 +20,7 @@ extern "C"
     typedef unsigned int u32;
 
     /// @brief Unsigned 64-bit integer
-    typedef unsigned long long u64;
+    typedef unsigned long u64;
 
     /// @brief Signed 8-bit integer
     typedef signed char s8;
@@ -32,7 +32,7 @@ extern "C"
     typedef signed int s32;
 
     /// @brief Signed 64-bit integer
-    typedef signed long long s64;
+    typedef signed long s64;
 
     /// @brief 32-bit floating point number
     typedef float f32;
