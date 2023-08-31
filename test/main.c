@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 
 #define __KINGPIN_BACKEND
 #include <kp/sha256.h>
@@ -15,6 +16,31 @@ void print_buffer(kp_buffer *buffer)
     printf("\n");
 }
 
+kp_size rng_interface(u8 *bytes, kp_size size)
+{
+    kp_size chunks = size / 4;
+    u8 remainder = size % 4;
+    u32 *ptr = (u32 *)bytes;
+
+    for (kp_size i = 0; i < chunks; i++)
+    {
+        ptr[i] = rand();
+    }
+
+    if (remainder > 0)
+    {
+        u32 last = rand();
+        u8 *last_ptr = (u8 *)&last;
+
+        for (u8 i = 0; i < remainder; i++)
+        {
+            bytes[(chunks * 4) + i] = last_ptr[i];
+        }
+    }
+
+    return size;
+}
+
 int main()
 {
     kp_dependency dep;
@@ -26,6 +52,9 @@ int main()
     dep.kp_memmove_fn = memmove;
     dep.kp_realloc_fn = realloc;
     dep.kp_log_fn = printf;
+    dep.kp_get_entropy_fn = rng_interface;
+
+    srand(time(NULL));
 
     kp_status status = kp_library_init(&dep);
 
@@ -36,21 +65,20 @@ int main()
     }
     printf("Library initialized\n");
 
-    kp_buffer buffer;
+    kp_ec_keypair keypair;
 
-    char *message = "Hello, world!";
+    kp_ed25519_generate_keypair(&keypair);
 
-    char digest[32];
+    kp_buffer init_msg;
 
-    kp_sha256_digest(message, strlen(message), digest);
+    kp_syn_init_msg(&init_msg, 0, 0, &keypair);
 
-    kp_buffer_init(&buffer);
+    print_buffer(&init_msg);
 
-    buffer.alloc(&buffer, digest, 32);
+    keypair.private_key.key.fn->free(&keypair.private_key.key);
+    keypair.public_key.key.fn->free(&keypair.public_key.key);
 
-    printf("SHA256 digest: ");
-
-    print_buffer(&buffer);    
+    kp_library_deinit(0);
 
     return 0;
 }
