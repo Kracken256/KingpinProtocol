@@ -1,7 +1,7 @@
 #ifndef __KINGPIN_PROTO_H_
 #define __KINGPIN_PROTO_H_
 
-#ifndef __KINGPIN_H_
+#if !defined(__KINGPIN_H_) && !defined(__KINGPIN_BACKEND)
 #error "Do not include this file directly. Include kingpin.h instead."
 #endif // __KINGPIN_H_
 

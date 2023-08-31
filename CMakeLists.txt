@@ -7,7 +7,7 @@ set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "")
 # CMAKE Do not use standard PATH
 set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "")
 
-set(CMAKE_CXX_FLAGS "-m64 -nostdlib -fno-builtin -Wall -Wextra -Wno-unused-parameter -I${CMAKE_SOURCE_DIR}/include -O3 -nodefaultlibs")
+set(CMAKE_CXX_FLAGS "-m64 -std=c99 -nostdlib -fno-builtin -Wall -Wextra -Wno-unused-parameter -I${CMAKE_SOURCE_DIR}/include -O3 -nodefaultlibs")
 
 # Sources
 file(GLOB_RECURSE SOURCES source/*.c)

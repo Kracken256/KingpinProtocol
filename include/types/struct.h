@@ -1,7 +1,7 @@
 #ifndef __KINGPIN_STRUCT_H_
 #define __KINGPIN_STRUCT_H_
 
-#ifndef __KINGPIN_KP_H_
+#if !defined(__KINGPIN_KP_H_) && !defined(__KINGPIN_BACKEND)
 #error "Do not include this file directly. Include types/kp.h instead."
 #endif // __KINGPIN_KP_H_
 
@@ -83,39 +83,20 @@ extern "C"
 
     } kp_uninit;
 
-    /// @brief A string structure for the Kingpin library
+    /// @brief A buffer structure for the Kingpin library
     /// @note This structure is used to provide the Kingpin library with
-    /// strings to prevent me from going insane.
-    /// Long live C++ and its std::string class.
-    typedef struct _kp_string
-    {
-        s8 *data;
-        kp_size length;
-
-        void (*alloc)(struct _kp_string *string, const s8 *data, kp_size length);
-        void (*free)(struct _kp_string *string);
-        void (*concat)(struct _kp_string *string, const s8 *data, kp_size length);
-        void (*append)(struct _kp_string *string, s8 c);
-        boolean *(*equals)(struct _kp_string *string, const struct _kp_string *other);
-    } kp_string;
-
-    /// @brief A vector structure for the Kingpin library
-    /// @note This structure is used to provide the Kingpin library with
-    /// vectors to prevent me from going insane.
-    /// @note Who needs Rust when you have C?
-    typedef struct _kp_vector
+    /// dynamic memory to prevent me from going insane.
+    /// @note Who needs C++/Rust when you have C?
+    typedef struct _kp_buffer
     {
         u8 *data;
-        kp_size length;
-
-        void (*alloc)(struct _kp_vector *self, const u8 *data, kp_size length);
-        void (*free)(struct _kp_vector *self);
-        void (*concat)(struct _kp_vector *self, const u8 *data, kp_size length);
-        void (*append)(struct _kp_vector *self, u8 c);
-        boolean *(*equals)(struct _kp_vector *self, const struct _kp_vector *other);
-    } kp_vector;
-
-    typedef kp_vector kp_buffer;
+        kp_size size;
+        kp_size capacity;
+        const void (*alloc)(struct _kp_buffer *self, const u8 *data, kp_size length);
+        void (*free)(struct _kp_buffer *self);
+        void (*concat)(struct _kp_buffer *self, const u8 *data, kp_size length);
+        boolean (*equal)(const struct _kp_buffer *self, const struct _kp_buffer *other);
+    } kp_buffer;
 
 #ifdef __cplusplus
 }

@@ -1,7 +1,7 @@
 #ifndef __KINGPIN_TYPES_H_
 #define __KINGPIN_TYPES_H_
 
-#ifndef __KINGPIN_KP_H_
+#if !defined(__KINGPIN_KP_H_) && !defined(__KINGPIN_BACKEND)
 #error "Do not include this file directly. Include types/kp.h instead."
 #endif // __KINGPIN_KP_H_
 
@@ -44,7 +44,7 @@ extern "C"
     typedef u8 boolean;
 
     /// @brief Standard size type
-    typedef u64 std_size_t;
+    typedef u64 kp_size;
 
 /// @brief Boolean true
 #define TRUE ((u8)1)

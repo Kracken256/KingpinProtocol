@@ -1,5 +1,5 @@
-#ifndef __KINGPIN_INIT_H_
-#define __KINGPIN_INIT_H_
+#ifndef __KINGPIN_BUFFER_H_
+#define __KINGPIN_BUFFER_H_
 
 #ifdef __cplusplus
 extern "C"
@@ -10,16 +10,18 @@ extern "C"
 #error "Do not include this file directly. Include kingpin.h instead."
 #endif // __KINGPIN_H_
 
-#include <types/basic.h>
 #include <types/struct.h>
-#include <types/enum.h>
 
-    kp_status kp_library_init(const kp_dependency *dependency);
+    void kp_buffer_init(kp_buffer *buffer);
 
-    kp_status kp_library_deinit(const kp_uninit *uninit_mode);
+#ifdef __KINGPIN_BACKEND
+
+    boolean kp_lib_buffer_init();
+
+#endif // __KINGPIN_BACKEND
 
 #ifdef __cplusplus
 }
 #endif // __cplusplus
 
-#endif // __KINGPIN_H_
+#endif // __KINGPIN_BUFFER_H_

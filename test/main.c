@@ -3,8 +3,8 @@
 #include <string.h>
 #include <stdio.h>
 
-
-int main() {
+int main()
+{
     kp_x25519_keypair keypair;
 
     kp_dependency dep;
@@ -17,17 +17,27 @@ int main() {
     dep.kp_realloc_fn = realloc;
     dep.kp_log_fn = printf;
 
-    kp_status status = kp_lib_init(&dep);
+    kp_status status = kp_library_init(&dep);
 
-    if (status != KP_SUCCESS) {
+    if (status != KP_SUCCESS)
+    {
         printf("Failed to initialize library\n");
         return 1;
     }
 
     printf("Library initialized\n");
 
+    kp_buffer buffer;
 
+    kp_buffer_init(&buffer);
 
+    buffer.alloc(&buffer, (u8 *)"Hello, ", 7);
+
+    buffer.concat(&buffer, (u8 *)"world!", 6);
+
+    printf("Buffer: %s\n", buffer.data);
+
+    buffer.free(&buffer);
 
     return 0;
 }

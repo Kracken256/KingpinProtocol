@@ -1,9 +1,9 @@
 #ifndef __KINGPIN_PROTO_STRUCTS_H_
 #define __KINGPIN_PROTO_STRUCTS_H_
 
-#ifndef __KINGPIN_BACKEND_H_
+#ifndef __KINGPIN_BACKEND
 #error "Do not include this file directly. Only backend .c files should do so."
-#endif // __KINGPIN_BACKEND_H_
+#endif // __KINGPIN_BACKEND
 
 #ifdef __cplusplus
 extern "C"

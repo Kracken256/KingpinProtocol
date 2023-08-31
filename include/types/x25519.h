@@ -1,7 +1,7 @@
 #ifndef __KINGPIN_X25519_H_
 #define __KINGPIN_X25519_H_
 
-#ifndef __KINGPIN_KP_H_
+#if !defined(__KINGPIN_KP_H_) && !defined(__KINGPIN_BACKEND)
 #error "Do not include this file directly. Include types/kp.h instead."
 #endif // __KINGPIN_KP_H_
 

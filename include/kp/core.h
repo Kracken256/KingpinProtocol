@@ -1,9 +1,9 @@
 #ifndef __KINGPIN_CORE_H_
 #define __KINGPIN_CORE_H_
 
-#ifndef __KINGPIN_BACKEND_H_
+#ifndef __KINGPIN_BACKEND
 #error "Do not include this file directly. Only backend .c files should do so."
-#endif // __KINGPIN_BACKEND_H_
+#endif // __KINGPIN_BACKEND
 
 #ifdef __cplusplus
 extern "C"
@@ -12,8 +12,23 @@ extern "C"
 
 #include <types/kp.h>
 
-    /// @brief Global configuration for Kingpin.
-    extern kp_dependency gKP_dependency_config;
+    void *kp_alloc(kp_size size);
+
+    void *kp_realloc(void *ptr, kp_size size);
+
+    void kp_free(void *ptr);
+
+    void kp_log(const char *fmt, ...);
+
+    void *kp_memcpy(void *dest, const void *src, kp_size size);
+
+    void *kp_memset(void *dest, u8 value, kp_size size);
+
+    s32 kp_memcmp(const void *ptr1, const void *ptr2, kp_size size);
+
+    void *kp_memmove(void *dest, const void *src, kp_size size);
+
+    void kp_set_dependency_config(const kp_dependency *config);
 
 #ifdef __cplusplus
 }

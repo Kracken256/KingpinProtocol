@@ -1,12 +1,14 @@
 #include <types/kp.h>
 
-#define __KINGPIN_BACKEND_H_
+#define __KINGPIN_BACKEND
 
+#include <kingpin.h>
 #include <kp/core.h>
+#include <kp/buffer.h>
 
-static boolean kp_dep_check(kp_dependency *d);
+static boolean kp_dep_check(const kp_dependency *d);
 
-kp_status kp_lib_init(kp_dependency *dependency)
+kp_status kp_library_init(const kp_dependency *dependency)
 {
     if (dependency == NULL)
         return KP_INVALID_ARGUMENT;
@@ -14,7 +16,10 @@ kp_status kp_lib_init(kp_dependency *dependency)
     if (!kp_dep_check(dependency))
         return KP_DEPENDENCY_MISSING;
 
-    gKP_dependency_config = *dependency;
+    kp_set_dependency_config(dependency);
+
+    if (!kp_lib_buffer_init())
+        return KP_INTERNAL_ERROR;
 
     return KP_SUCCESS;
 }
@@ -22,7 +27,7 @@ kp_status kp_lib_init(kp_dependency *dependency)
 /// @brief Check if the dependency structure is valid.
 /// @param d The dependency structure to check.
 /// @return TRUE if the dependency structure is valid, FALSE otherwise.
-static boolean kp_dep_check(kp_dependency *d)
+static boolean kp_dep_check(const kp_dependency *d)
 {
     boolean status = TRUE;
 
@@ -78,7 +83,7 @@ exit:
     return status;
 }
 
-kp_status kp_lib_deinit(kp_uninit *uninit_mode)
+kp_status kp_library_deinit(const kp_uninit *uninit_mode)
 {
     if (uninit_mode == NULL)
         return KP_SUCCESS;
