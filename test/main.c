@@ -3,10 +3,20 @@
 #include <string.h>
 #include <stdio.h>
 
+#define __KINGPIN_BACKEND
+#include <kp/sha256.h>
+
+void print_buffer(kp_buffer *buffer)
+{
+    for (size_t i = 0; i < buffer->size; i++)
+    {
+        printf("%02x", buffer->data[i]);
+    }
+    printf("\n");
+}
+
 int main()
 {
-    kp_x25519_keypair keypair;
-
     kp_dependency dep;
     dep.kp_free_fn = free;
     dep.kp_malloc_fn = malloc;
@@ -24,20 +34,23 @@ int main()
         printf("Failed to initialize library\n");
         return 1;
     }
-
     printf("Library initialized\n");
 
     kp_buffer buffer;
 
+    char *message = "Hello, world!";
+
+    char digest[32];
+
+    kp_sha256_digest(message, strlen(message), digest);
+
     kp_buffer_init(&buffer);
 
-    buffer.alloc(&buffer, (u8 *)"Hello, ", 7);
+    buffer.alloc(&buffer, digest, 32);
 
-    buffer.concat(&buffer, (u8 *)"world!", 6);
+    printf("SHA256 digest: ");
 
-    printf("Buffer: %s\n", buffer.data);
-
-    buffer.free(&buffer);
+    print_buffer(&buffer);    
 
     return 0;
 }

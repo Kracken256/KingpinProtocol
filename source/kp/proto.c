@@ -2,7 +2,7 @@
 
 #include <kp/proto.h>
 
-kp_status kp_init_connect_msg(kp_connect_msg *msg, u32 proclamation, u8 sess_tp, const kp_x25519_keypair *keypair)
+kp_status kp_init_connect_msg(kp_connect_msg *msg, u32 proclamation, u8 sess_tp, const kp_ec_keypair *keypair)
 {
 }
 

@@ -83,21 +83,6 @@ extern "C"
 
     } kp_uninit;
 
-    /// @brief A buffer structure for the Kingpin library
-    /// @note This structure is used to provide the Kingpin library with
-    /// dynamic memory to prevent me from going insane.
-    /// @note Who needs C++/Rust when you have C?
-    typedef struct _kp_buffer
-    {
-        u8 *data;
-        kp_size size;
-        kp_size capacity;
-        const void (*alloc)(struct _kp_buffer *self, const u8 *data, kp_size length);
-        void (*free)(struct _kp_buffer *self);
-        void (*concat)(struct _kp_buffer *self, const u8 *data, kp_size length);
-        boolean (*equal)(const struct _kp_buffer *self, const struct _kp_buffer *other);
-    } kp_buffer;
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus

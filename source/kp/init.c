@@ -5,6 +5,7 @@
 #include <kingpin.h>
 #include <kp/core.h>
 #include <kp/buffer.h>
+#include <kp/ec.h>
 
 static boolean kp_dep_check(const kp_dependency *d);
 
@@ -19,6 +20,9 @@ kp_status kp_library_init(const kp_dependency *dependency)
     kp_set_dependency_config(dependency);
 
     if (!kp_lib_buffer_init())
+        return KP_INTERNAL_ERROR;
+
+    if (!kp_ec_init())
         return KP_INTERNAL_ERROR;
 
     return KP_SUCCESS;

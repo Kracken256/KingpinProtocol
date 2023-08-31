@@ -10,7 +10,22 @@ extern "C"
 #error "Do not include this file directly. Include kingpin.h instead."
 #endif // __KINGPIN_H_
 
-#include <types/struct.h>
+#include <types/basic.h>
+
+    /// @brief A buffer structure for the Kingpin library
+    /// @note This structure is used to provide the Kingpin library with
+    /// dynamic memory to prevent me from going insane.
+    /// @note Who needs C++/Rust when you have C?
+    typedef struct _kp_buffer
+    {
+        u8 *data;
+        kp_size size;
+        kp_size capacity;
+        const void (*alloc)(struct _kp_buffer *self, const u8 *data, kp_size length);
+        void (*free)(struct _kp_buffer *self);
+        void (*concat)(struct _kp_buffer *self, const u8 *data, kp_size length);
+        boolean (*equal)(const struct _kp_buffer *self, const struct _kp_buffer *other);
+    } kp_buffer;
 
     void kp_buffer_init(kp_buffer *buffer);
 

@@ -16,7 +16,8 @@ static void kp_buffer_alloc(kp_buffer *self, const u8 *data, kp_size length)
     self->size = length;
     self->capacity = length;
 
-    kp_memcpy(self->data, data, length);
+    if (data)
+        kp_memcpy(self->data, data, length);
 }
 
 static void kp_buffer_free(kp_buffer *self)
@@ -69,6 +70,10 @@ static boolean kp_buffer_equal(const kp_buffer *self, const kp_buffer *other)
 
 void kp_buffer_init(kp_buffer *buffer)
 {
+    /// @note If already initialized, free the buffer, then reinitialize it.
+    if (buffer->alloc == kp_buffer_alloc)
+        buffer->free(buffer);
+
     buffer->data = NULL;
     buffer->size = 0;
     buffer->capacity = 0;

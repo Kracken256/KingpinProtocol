@@ -11,14 +11,14 @@ extern "C"
 #endif // __cplusplus
 
 #include <types/kp.h>
-#include <types/x25519.h>
+#include <types/ec-types.h>
 
     typedef struct _kp_connect_msg
     {
         u32 proclamation;
         u8 sess_tp;
-        kp_x25519_public_key pubkey;
-        kp_ed25519_signature sig;
+        kp_ec_public_key pubkey;
+        kp_ecdsa_signature sig;
     } kp_connect_msg;
 
     /// @brief Initialize a Kingpin protocol connect message structure
@@ -27,7 +27,7 @@ extern "C"
     /// @param sess_tp The session type to use
     /// @param pubkey The keypair to use
     /// @return KP_SUCCESS on success, an error code otherwise
-    kp_status kp_init_connect_msg(kp_connect_msg *msg, u32 proclamation, u8 sess_tp, const kp_x25519_keypair *keypair);
+    kp_status kp_init_connect_msg(kp_connect_msg *msg, u32 proclamation, u8 sess_tp, const kp_ec_keypair *keypair);
 
     /// @brief Synthesize a Kingpin protocol connect message, for transmission by user
     /// @param buffer The buffer structure to use for the message

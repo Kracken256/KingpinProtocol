@@ -7,9 +7,13 @@ extern "C"
 #endif // __cplusplus
 
 #include <types/kp.h>
+#include <types/ec-types.h>
+
 #include <kp/init.h>
 #include <kp/proto.h>
 #include <kp/buffer.h>
+#include <kp/ec.h>
+#include <kp/cipher.h>
 
 #ifdef __cplusplus
 }
