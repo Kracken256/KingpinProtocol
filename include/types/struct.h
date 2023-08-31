@@ -92,11 +92,11 @@ extern "C"
         s8 *data;
         std_size_t length;
 
-        void (*alloc)(struct _kp_string *string, s8 *data, std_size_t length);
+        void (*alloc)(struct _kp_string *string, const s8 *data, std_size_t length);
         void (*free)(struct _kp_string *string);
         void (*concat)(struct _kp_string *string, const s8 *data, std_size_t length);
         void (*append)(struct _kp_string *string, s8 c);
-        boolean *(*equals)(struct _kp_string *string, struct _kp_string *other);
+        boolean *(*equals)(struct _kp_string *string, const struct _kp_string *other);
     } kp_string;
 
     /// @brief A vector structure for the Kingpin library
@@ -108,12 +108,14 @@ extern "C"
         u8 *data;
         std_size_t length;
 
-        void (*alloc)(struct _kp_vector *self, u8 *data, std_size_t length);
+        void (*alloc)(struct _kp_vector *self, const u8 *data, std_size_t length);
         void (*free)(struct _kp_vector *self);
         void (*concat)(struct _kp_vector *self, const u8 *data, std_size_t length);
         void (*append)(struct _kp_vector *self, u8 c);
-        boolean *(*equals)(struct _kp_vector *self, struct _kp_vector *other);
+        boolean *(*equals)(struct _kp_vector *self, const struct _kp_vector *other);
     } kp_vector;
+
+    typedef kp_vector kp_buffer;
 
 #ifdef __cplusplus
 }

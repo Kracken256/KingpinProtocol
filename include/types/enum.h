@@ -9,12 +9,12 @@
 extern "C"
 {
 #endif // __cplusplus
-    
+
     /// @brief The status of a function call
     /// @warning This status enum has success == 1 and fail == 0
     typedef enum _kp_status
     {
-        KP_OK = 1,
+        KP_SUCCESS = 1,
         KP_FAIL = 0,
         KP_DEPENDENCY_MISSING = 100,
         KP_INVALID_ARGUMENT = 100,
