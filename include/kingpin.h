@@ -8,6 +8,7 @@ extern "C"
 
 #include <types/kp.h>
 #include <kp/init.h>
+#include <kp/proto.h>
 
 #ifdef __cplusplus
 }
