@@ -12,6 +12,10 @@ extern "C"
 
 #include <types/basic.h>
 
+#define KP_BUFFER_FLAG_SENSITIVE 0x01
+
+    typedef struct _kp_buffer_methods kp_buffer_methods;
+
     /// @brief A buffer structure for the Kingpin library
     /// @note This structure is used to provide the Kingpin library with
     /// dynamic memory to prevent me from going insane.
@@ -21,17 +25,27 @@ extern "C"
         u8 *data;
         kp_size size;
         kp_size capacity;
-        const void (*alloc)(struct _kp_buffer *self, const u8 *data, kp_size length);
+        u8 flags;
+        const kp_buffer_methods *fn;
+    } kp_buffer;
+
+    typedef struct _kp_buffer_methods
+    {
+        void (*alloc)(struct _kp_buffer *self, const u8 *data, kp_size length);
         void (*free)(struct _kp_buffer *self);
         void (*concat)(struct _kp_buffer *self, const u8 *data, kp_size length);
         boolean (*equal)(const struct _kp_buffer *self, const struct _kp_buffer *other);
-    } kp_buffer;
+        void (*set_sensitive)(struct _kp_buffer *self, boolean sensitive);
+    } kp_buffer_methods;
 
     void kp_buffer_init(kp_buffer *buffer);
 
+    void kp_buffer_clear_sensitive();
+
 #ifdef __KINGPIN_BACKEND
 
-    boolean kp_lib_buffer_init();
+    boolean kp_library_buffer_init();
+    void kp_library_buffer_deinit();
 
 #endif // __KINGPIN_BACKEND
 
