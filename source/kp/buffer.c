@@ -51,7 +51,7 @@ static void kp_buffer_free(kp_buffer *self)
         return;
 
     if (self->data && self->size > 0)
-    {   
+    {
         /// If sensitive, zero out the buffer.
         if (self->flags & KP_BUFFER_FLAG_SENSITIVE)
             kp_memset(self->data, 0, self->size);
@@ -71,6 +71,17 @@ static void kp_buffer_free(kp_buffer *self)
         {
             kp_memmove(&kp_bufs_alloc[i], &kp_bufs_alloc[i + 1], sizeof(kp_buffer *) * (kp_bufs_alloc_size - i - 1));
             kp_bufs_alloc_size--;
+            break;
+        }
+    }
+
+    /// Remove from kp_buf_sensitive_list
+    for (kp_size i = 0; i < kp_buf_sensitive_list_size; i++)
+    {
+        if (kp_buf_sensitive_list[i] == self)
+        {
+            kp_memmove(&kp_buf_sensitive_list[i], &kp_buf_sensitive_list[i + 1], sizeof(kp_buffer *) * (kp_buf_sensitive_list_size - i - 1));
+            kp_buf_sensitive_list_size--;
             break;
         }
     }
@@ -115,8 +126,9 @@ static boolean kp_buffer_is_sensitive(const kp_buffer *buffer)
 {
     for (kp_size i = 0; i < kp_buf_sensitive_list_size; i++)
     {
-        if (!kp_buf_sensitive_list[i])
+        if (!kp_buf_sensitive_list[i] || !kp_buf_sensitive_list[i]->data)
             continue;
+
         if (kp_buf_sensitive_list[i]->data == buffer->data)
             return TRUE;
     }
@@ -143,10 +155,7 @@ static void kp_buffer_remove_sensitive(const kp_buffer *buffer)
         if (kp_buf_sensitive_list[i]->data == buffer->data)
         {
             kp_memmove(&kp_buf_sensitive_list[i], &kp_buf_sensitive_list[i + 1], sizeof(kp_buffer) * (kp_buf_sensitive_list_size - i - 1));
-
-            /// Set the last element to NULL.
-            kp_buf_sensitive_list[kp_buf_sensitive_list_size - 1] = NULL;
-            break;
+            kp_buf_sensitive_list_size--;
         }
     }
 }
@@ -189,7 +198,7 @@ void kp_buffer_clear_sensitive()
 {
     for (kp_size i = 0; i < kp_buf_sensitive_list_size; i++)
     {
-        if (!kp_buf_sensitive_list[i]->data || kp_buf_sensitive_list[i]->size == 0)
+        if (!kp_buf_sensitive_list[i] || !kp_buf_sensitive_list[i]->data || kp_buf_sensitive_list[i]->size == 0)
             continue;
 
         kp_memset(kp_buf_sensitive_list[i]->data, 0, kp_buf_sensitive_list[i]->size);
@@ -217,17 +226,21 @@ void kp_library_buffer_deinit()
 
     for (kp_size i = 0; i < kp_bufs_alloc_size; i++)
     {
+        if (!kp_bufs_alloc[i] || !kp_bufs_alloc[i]->data)
+            continue;
+
         kp_bufs_alloc[i]->fn->free(kp_bufs_alloc[i]);
+        kp_bufs_alloc[i] = NULL;
     }
 
     kp_bufs_alloc_size = 0;
 
     if (kp_buf_sensitive_list)
         kp_free(kp_buf_sensitive_list);
-    
+
     if (kp_bufs_alloc)
         kp_free(kp_bufs_alloc);
-    
+
     kp_buf_sensitive_list = NULL;
     kp_bufs_alloc = NULL;
 }
