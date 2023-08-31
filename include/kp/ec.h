@@ -21,15 +21,15 @@ extern "C"
 
     void kp_x25519_derive_shared_secret(const kp_ec_private_key *private_key, const kp_ec_public_key *public_key, kp_ecdh_secret *shared_secret);
 
-    void kp_ed25519_sign(const kp_ec_private_key *private_key, const kp_buffer *message, kp_ecdsa_signature *signature);
-
-    boolean kp_ed25519_verify(const kp_ec_public_key *public_key, const kp_buffer *message, const kp_ecdsa_signature *signature);
+    void kp_ec_fingerprint(const kp_ec_public_key *public_key, kp_buffer *fingerprint);
 
     void kp_ed25519_generate_keypair(kp_ec_keypair *keypair);
 
     void kp_ed25519_derive_public_key(const kp_ec_private_key *private_key, kp_ec_public_key *public_key);
 
-    void kp_ec_fingerprint(const kp_ec_public_key *public_key, kp_buffer *fingerprint);
+    void kp_ed25519_sign(const kp_ec_keypair *keypair, const kp_buffer *message, kp_ecdsa_signature *signature);
+
+    boolean kp_ed25519_verify(const kp_ec_public_key *public_key, const kp_buffer *message, const kp_ecdsa_signature *signature);
 
 #ifdef __KINGPIN_BACKEND
     kp_status kp_ec_init(void);
