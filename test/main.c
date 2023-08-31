@@ -4,9 +4,6 @@
 #include <stdio.h>
 #include <time.h>
 
-#define __KINGPIN_BACKEND
-#include <kp/sha256.h>
-
 void print_buffer(kp_buffer *buffer)
 {
     for (size_t i = 0; i < buffer->size; i++)
@@ -56,27 +53,34 @@ int main()
 
     srand(time(NULL));
 
-    kp_status status = kp_library_init(&dep);
+    kp_library_init(&dep);
 
-    if (status != KP_SUCCESS)
-    {
-        printf("Failed to initialize library\n");
-        return 1;
-    }
-    printf("Library initialized\n");
+    kp_ec_keypair keypair_1;
+    kp_ec_keypair keypair_2;
 
-    kp_ec_keypair keypair;
-
-    kp_ed25519_generate_keypair(&keypair);
+    kp_x25519_generate_keypair(&keypair_1);
+    kp_x25519_generate_keypair(&keypair_2);
 
     kp_buffer init_msg;
+    kp_buffer resp_msg;
 
-    kp_syn_init_msg(&init_msg, 0, 0, &keypair);
+    kp_syn_init_msg(&init_msg, 0xdeadbeef, 0x01, &keypair_1);
+
+    kp_syn_resp_msg(&resp_msg, &keypair_2);
 
     print_buffer(&init_msg);
+    print_buffer(&resp_msg);
+    
 
-    keypair.private_key.key.fn->free(&keypair.private_key.key);
-    keypair.public_key.key.fn->free(&keypair.public_key.key);
+    kp_ecdh_secret secret_1;
+    kp_ecdh_secret secret_2;
+
+    kp_x25519_derive_shared_secret(&keypair_1.private_key, &keypair_2.public_key, &secret_1);
+
+    kp_x25519_derive_shared_secret(&keypair_2.private_key, &keypair_1.public_key, &secret_2);
+
+    print_buffer(&secret_1.secret);
+    print_buffer(&secret_2.secret);
 
     kp_library_deinit(0);
 
