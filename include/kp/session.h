@@ -50,17 +50,11 @@ extern "C"
         /// @brief Establish connection on socket (already TCP connected)
         kp_status (*connect)(kp_session *self, u8 flags, u32 id, const kp_ec_keypair *keypair, const kp_peers_allowed *peers_allowed);
 
-        /// @brief Read data from the session
-        kp_status (*read)(kp_session *self, kp_buffer *buffer);
+        /// @brief Read data from the session into buffer.
+        kp_status (*read)(kp_session *self, void *buffer, kp_size *length);
 
-        /// @brief Read data from the session into basic buffer.
-        kp_status (*read_raw)(kp_session *self, u8 *buffer, kp_size *length);
-
-        /// @brief Write data to the session
-        kp_status (*write)(kp_session *self, kp_buffer *buffer);
-
-        /// @brief Write buffer data to the session from basic buffer.
-        kp_status (*write_raw)(kp_session *self, const u8 *buffer, kp_size length);
+        /// @brief Write data from buffer into the session.
+        kp_status (*write)(kp_session *self, const void *buffer, kp_size length);
 
         /// @brief Clears the sensitive data from the session and frees the memory.
         kp_status (*close)(kp_session *self);
@@ -85,13 +79,9 @@ extern "C"
 
     kp_status kp_session_accept_ex(kp_session *session, u8 flags, u32 id, const kp_ec_keypair *keypair, const kp_peers_allowed *peers_allowed);
 
-    kp_status kp_session_write(kp_session *session, kp_buffer *buffer);
+    kp_status kp_session_write(kp_session *session, const u8 *buffer, kp_size length);
 
-    kp_status kp_session_write_raw(kp_session *session, const u8 *buffer, kp_size length);
-
-    kp_status kp_session_read(kp_session *session, kp_buffer *buffer, kp_size *length);
-
-    kp_status kp_session_read_raw(kp_session *session, u8 *buffer, kp_size *length);
+    kp_status kp_session_read(kp_session *session, u8 *buffer, kp_size *length);
 
     kp_status kp_session_close(kp_session *session);
 

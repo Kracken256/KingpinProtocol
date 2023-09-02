@@ -11,7 +11,6 @@ extern "C"
 #endif // __cplusplus
 
 #include <types/err.h>
-#include <kp/buffer.h>
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -22,10 +21,13 @@ extern "C"
     /// @brief Generic cross-platform socket interface.
     typedef struct _kp_socket
     {
-        kp_size (*read)(struct _kp_socket *socket, kp_buffer *buffer, kp_size size);
-        kp_size (*read_raw)(struct _kp_socket *socket, void *buffer, kp_size size);
-        kp_size (*write)(struct _kp_socket *socket, kp_buffer *buffer);
-        kp_size (*write_raw)(struct _kp_socket *socket, const void *buffer, kp_size size);
+        /// @brief Read data from the socket into a buffer.
+        kp_size (*read)(struct _kp_socket *socket, void *buffer, kp_size size);
+
+        /// @brief Write data to the socket from a buffer.
+        kp_size (*write)(struct _kp_socket *socket, const void *buffer, kp_size size);
+
+        /// @brief Close the socket.
         s32 (*close)(struct _kp_socket *socket);
 
 #if defined(__linux__) || defined(__APPLE__)
@@ -36,6 +38,9 @@ extern "C"
 #warning "No KINGPIN socket wrapper implementation for this platform."
     u32 filler;
 #endif
+
+        /// @brief Not used, but available for custom implementations.
+        u64 generic_tag;
     } kp_socket;
 
     /// Socket wrapper implementation for Linux and macOS.

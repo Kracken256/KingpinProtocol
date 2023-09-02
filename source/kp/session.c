@@ -63,7 +63,7 @@ kp_status kp_fn_accept(kp_session *self, u8 flags, u32 id, const kp_ec_keypair *
     while (bytes_read < sizeof(init_sp))
     {
         kp_size bytes_read_now = 0;
-        bytes_read_now = self->socket.read_raw(&self->socket, (u8 *)&init_sp + bytes_read, sizeof(init_sp) - bytes_read);
+        bytes_read_now = self->socket.read(&self->socket, (u8 *)&init_sp + bytes_read, sizeof(init_sp) - bytes_read);
 
         if (bytes_read_now <= 0)
             return KP_FAIL;
@@ -111,7 +111,7 @@ kp_status kp_fn_accept(kp_session *self, u8 flags, u32 id, const kp_ec_keypair *
     while (bytes_written < sizeof(resp_sp))
     {
         kp_size bytes_written_now = 0;
-        bytes_written_now = self->socket.write_raw(&self->socket, (u8 *)&resp_sp + bytes_written, sizeof(resp_sp) - bytes_written);
+        bytes_written_now = self->socket.write(&self->socket, (u8 *)&resp_sp + bytes_written, sizeof(resp_sp) - bytes_written);
 
         if (bytes_written_now <= 0)
             return KP_FAIL;
@@ -141,22 +141,12 @@ kp_status kp_fn_connect(kp_session *self, u8 flags, u32 id, const kp_ec_keypair 
     return KP_NOT_IMPLEMENTED;
 }
 
-kp_status kp_fn_read(kp_session *self, kp_buffer *buffer)
+kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
 {
     return KP_NOT_IMPLEMENTED;
 }
 
-kp_status kp_fn_read_raw(kp_session *self, u8 *buffer, kp_size *length)
-{
-    return KP_NOT_IMPLEMENTED;
-}
-
-kp_status kp_fn_write(kp_session *self, kp_buffer *buffer)
-{
-    return KP_NOT_IMPLEMENTED;
-}
-
-kp_status kp_fn_write_raw(kp_session *self, const u8 *buffer, kp_size length)
+kp_status kp_fn_write(kp_session *self, const void *buffer, kp_size length)
 {
     return KP_NOT_IMPLEMENTED;
 }
@@ -187,9 +177,7 @@ kp_status kp_library_session_init()
     gSessionFunctions.accept = kp_fn_accept;
     gSessionFunctions.connect = kp_fn_connect;
     gSessionFunctions.read = kp_fn_read;
-    gSessionFunctions.read_raw = kp_fn_read_raw;
     gSessionFunctions.write = kp_fn_write;
-    gSessionFunctions.write_raw = kp_fn_write_raw;
     gSessionFunctions.close = kp_fn_session_close;
 
     return KP_SUCCESS;
@@ -205,24 +193,14 @@ kp_status kp_session_accept_ex(kp_session *session, u8 flags, u32 id, const kp_e
     return session->fn->accept(session, flags, id, keypair, peers_allowed);
 }
 
-kp_status kp_session_write(kp_session *session, kp_buffer *buffer)
+kp_status kp_session_write(kp_session *session, const u8 *buffer, kp_size length)
 {
-    return session->fn->write(session, buffer);
+    return session->fn->write(session, buffer, length);
 }
 
-kp_status kp_session_write_raw(kp_session *session, const u8 *buffer, kp_size length)
+kp_status kp_session_read(kp_session *session, u8 *buffer, kp_size *length)
 {
-    return session->fn->write_raw(session, buffer, length);
-}
-
-kp_status kp_session_read(kp_session *session, kp_buffer *buffer, kp_size *length)
-{
-    return session->fn->read(session, buffer);
-}
-
-kp_status kp_session_read_raw(kp_session *session, u8 *buffer, kp_size *length)
-{
-    return session->fn->read_raw(session, buffer, length);
+    return session->fn->read(session, buffer, length);
 }
 
 kp_status kp_session_close(kp_session *session)
