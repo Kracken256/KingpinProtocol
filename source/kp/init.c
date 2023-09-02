@@ -33,7 +33,7 @@ kp_status kp_library_init(const kp_dependency *dependency)
     if (!kp_library_rng_init(entropy, entropy_size))
         return KP_INTERNAL_ERROR;
 
-    if (!kp_ec_init())
+    if (!kp_library_ec_init())
         return KP_INTERNAL_ERROR;
 
     kp_library_str_init();

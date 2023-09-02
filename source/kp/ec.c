@@ -7,7 +7,7 @@
 #include <kp/checksum.h>
 #include <kp/core.h>
 
-kp_status kp_ec_init(void)
+kp_status kp_library_ec_init(void)
 {
     return KP_SUCCESS;
 }
