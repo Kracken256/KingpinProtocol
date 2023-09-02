@@ -24,15 +24,6 @@ static void kp_buffer_alloc(kp_buffer *self, const u8 *data, kp_size length)
     if (!self)
         return;
 
-    if (self->data && length > self->capacity)
-    {
-        self->data = kp_realloc(self->data, length);
-        self->capacity = length;
-        self->size = length;
-
-        return;
-    }
-
     if (self->data)
         self->fn->free(self);
 
@@ -66,6 +57,7 @@ static void kp_buffer_free(kp_buffer *self)
             kp_memset(self->data, 0, self->size);
 
         kp_free(self->data);
+        self->data = NULL;
     }
 
     self->data = NULL;
@@ -73,12 +65,16 @@ static void kp_buffer_free(kp_buffer *self)
     self->capacity = 0;
     self->fn = NULL;
 
-    /// Remove from kp_bufs_alloc
     for (kp_size i = 0; i < kp_bufs_alloc_size; i++)
     {
         if (kp_bufs_alloc[i] == self)
         {
-            kp_memmove(&kp_bufs_alloc[i], &kp_bufs_alloc[i + 1], sizeof(kp_buffer *) * (kp_bufs_alloc_size - i - 1));
+            // Move the last element to fill the gap
+            kp_bufs_alloc[i] = kp_bufs_alloc[kp_bufs_alloc_size - 1];
+
+            kp_bufs_alloc[kp_bufs_alloc_size - 1] = NULL;
+
+            // Decrease the array size
             kp_bufs_alloc_size--;
             break;
         }
