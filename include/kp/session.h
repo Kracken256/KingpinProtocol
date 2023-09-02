@@ -17,12 +17,9 @@ extern "C"
 
     typedef struct _kp_session_keys
     {
-        u8 rx[32];
-        u8 tx[32];
-        u8 rx_iv[12];
-        u8 tx_iv[12];
-        u8 rx_mac[16];
-        u8 tx_mac[16];
+        u8 enc[32];
+        u8 iv[16];
+        u8 mac[16];
     } kp_session_keys;
 
     typedef enum _kp_session_status
@@ -88,6 +85,12 @@ extern "C"
     kp_status kp_session_read(kp_session *session, u8 *buffer, kp_size *length);
 
     kp_status kp_session_close(kp_session *session);
+
+    void kp_session_free(kp_session *session);
+
+    void kp_session_key_serialize(const kp_session_keys *keys, kp_buffer *buffer);
+
+    void kp_session_key_deserialize(kp_session_keys *keys, const kp_buffer *buffer);
 
 #ifdef __KINGPIN_BACKEND
     kp_status kp_library_session_init();
