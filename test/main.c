@@ -16,6 +16,15 @@ void print_buffer(kp_buffer *buffer)
     printf("\n");
 }
 
+void print_buffer_raw(u8 *buffer, kp_size size)
+{
+    for (size_t i = 0; i < size; i++)
+    {
+        printf("%02x", buffer[i]);
+    }
+    printf("\n");
+}
+
 kp_size rng_interface(u8 *bytes, kp_size size)
 {
     kp_size chunks = size / 4;
@@ -134,9 +143,18 @@ int main(int argc, char **argv)
 
         printf("err: %s\n", errstr);
 
-        kp_session_write(&session, "Hello, world!", 13);
+        // kp_session_write(&session, "Hello, world!", 13);
+
+        printf("enc: ");
+        print_buffer_raw(session.keys.enc, 32);
+        printf("iv: ");
+        print_buffer_raw(session.keys.iv, 16);
+        printf("mac: ");
+        print_buffer_raw(session.keys.mac, 16);
 
         kp_session_close(&session);
+
+        kp_session_free(&session);
 
         close(sockfd);
     }
@@ -165,15 +183,16 @@ int main(int argc, char **argv)
 
         printf("err: %s\n", errstr);
 
-        u8 buffer[1024];
-        kp_size length = 1024;
-        memset(buffer, 0, 1024);
-
-        kp_session_read(&session, buffer, &length);
-
-        printf("read: %s\n", buffer);
+        printf("enc: ");
+        print_buffer_raw(session.keys.enc, 32);
+        printf("iv: ");
+        print_buffer_raw(session.keys.iv, 16);
+        printf("mac: ");
+        print_buffer_raw(session.keys.mac, 16);
 
         kp_session_close(&session);
+
+        kp_session_free(&session);
     }
 
     kp_library_deinit(0);
