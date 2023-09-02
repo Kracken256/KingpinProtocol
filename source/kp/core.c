@@ -6,20 +6,6 @@
 /// @brief Global configuration for Kingpin.
 kp_dependency gKP_dependency_config;
 
-void *kp_realloc_basic(void *ptr, kp_size size)
-{
-    void *new_ptr = kp_alloc(size);
-
-    if (new_ptr == NULL)
-        return NULL;
-
-    kp_memcpy(new_ptr, ptr, size);
-
-    kp_free(ptr);
-
-    return new_ptr;
-}
-
 void *kp_memcpy_basic(void *dest, const void *src, kp_size size)
 {
     u8 *dest8 = (u8 *)dest;
@@ -133,20 +119,17 @@ void kp_set_dependency_config(const kp_dependency *config)
 {
     gKP_dependency_config = *config;
 
-    if (gKP_dependency_config.kp_realloc_fn == NULL)
-        gKP_dependency_config.kp_realloc_fn = kp_realloc_basic;
-
     if (gKP_dependency_config.kp_memcpy_fn == NULL)
-        gKP_dependency_config.kp_memcpy_fn = kp_memcpy_basic;
+        gKP_dependency_config.kp_memcpy_fn = &kp_memcpy_basic;
 
     if (gKP_dependency_config.kp_memset_fn == NULL)
-        gKP_dependency_config.kp_memset_fn = kp_memset_basic;
+        gKP_dependency_config.kp_memset_fn = &kp_memset_basic;
 
     if (gKP_dependency_config.kp_memcmp_fn == NULL)
-        gKP_dependency_config.kp_memcmp_fn = kp_memcmp_basic;
+        gKP_dependency_config.kp_memcmp_fn = &kp_memcmp_basic;
 
     if (gKP_dependency_config.kp_memmove_fn == NULL)
-        gKP_dependency_config.kp_memmove_fn = kp_memmove_basic;
+        gKP_dependency_config.kp_memmove_fn = &kp_memmove_basic;
 }
 
 void kp_strncpy(s8 *dest, const s8 *src, kp_size size)

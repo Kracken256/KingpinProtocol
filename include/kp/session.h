@@ -79,6 +79,10 @@ extern "C"
 
     kp_status kp_session_accept_ex(kp_session *session, u8 flags, u32 id, const kp_ec_keypair *keypair, const kp_peers_allowed *peers_allowed);
 
+    kp_status kp_session_connect(kp_session *session, const kp_ec_keypair *keypair, const kp_peers_allowed *peers_allowed);
+
+    kp_status kp_session_connect_ex(kp_session *session, u8 flags, u32 id, const kp_ec_keypair *keypair, const kp_peers_allowed *peers_allowed);
+
     kp_status kp_session_write(kp_session *session, const u8 *buffer, kp_size length);
 
     kp_status kp_session_read(kp_session *session, u8 *buffer, kp_size *length);

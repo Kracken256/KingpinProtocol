@@ -41,18 +41,44 @@ kp_size rng_interface(u8 *bytes, kp_size size)
     return size;
 }
 
-int main()
+kp_size kp_socket_i2c_read(kp_socket *socket, void *buffer, kp_size size)
+{
+    /// Read data I2C into buffer
+    return 0;
+}
+
+kp_size kp_socket_i2c_write(kp_socket *socket, const void *buffer, kp_size size)
+{
+    /// Write data I2C from buffer
+    return 0;
+}
+
+s32 kp_socket_i2c_close(kp_socket *socket)
+{
+    /// Close I2C socket
+    return 0;
+}
+
+kp_socket kp_socket_i2c_create()
+{
+    kp_socket socket;
+    socket.read = kp_socket_i2c_read;
+    socket.write = kp_socket_i2c_write;
+    socket.close = kp_socket_i2c_close;
+    return socket;
+}
+
+int main(int argc, char **argv)
 {
     kp_dependency dep;
     dep.kp_free_fn = free;
     dep.kp_malloc_fn = malloc;
-    dep.kp_memset_fn = memset;
-    dep.kp_memcpy_fn = memcpy;
-    dep.kp_memcmp_fn = memcmp;
-    dep.kp_memmove_fn = memmove;
     dep.kp_realloc_fn = realloc;
-    dep.kp_log_fn = printf;
     dep.kp_get_entropy_fn = rng_interface;
+    dep.kp_memcmp_fn = NULL;
+    dep.kp_memcpy_fn = NULL;
+    dep.kp_memmove_fn = NULL;
+    dep.kp_memset_fn = NULL;
 
     srand(time(NULL));
 
@@ -67,47 +93,88 @@ int main()
 
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
-    struct sockaddr_in addr;
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(4444);
-    addr.sin_addr.s_addr = htonl(INADDR_ANY);
-
-    int true = 1;
-
-    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &true, sizeof(int)) == -1)
+    if (argc == 1)
     {
-        perror("Setsockopt");
-        exit(1);
-    }
 
-    if (bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) != 0)
+        struct sockaddr_in addr;
+        addr.sin_family = AF_INET;
+        addr.sin_port = htons(4444);
+        addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+        int true = 1;
+
+        if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &true, sizeof(int)) == -1)
+        {
+            perror("Setsockopt");
+            exit(1);
+        }
+
+        if (bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) != 0)
+        {
+            printf("bind failed\n");
+            return 1;
+        }
+
+        if (listen(sockfd, 3) != 0)
+        {
+            printf("listen failed\n");
+            return 1;
+        }
+
+        int clientfd = accept(sockfd, NULL, NULL);
+
+        kp_socket my_socket = kp_socket_wrap(clientfd);
+
+        kp_session session = kp_session_wrap(my_socket);
+
+        kp_status err = kp_session_accept(&session, &keypair_1, NULL);
+
+        char errstr[20];
+        kp_errstr(err, errstr, 20);
+
+        printf("err: %s\n", errstr);
+
+        kp_session_write(&session, "Hello, world!", 13);
+
+        kp_session_close(&session);
+
+        close(sockfd);
+    }
+    else
     {
-        printf("bind failed\n");
-        return 1;
+        /// Connect to 0.0.0.0:4444
+        struct sockaddr_in addr;
+        addr.sin_family = AF_INET;
+        addr.sin_port = htons(4444);
+        addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+        if (connect(sockfd, (struct sockaddr *)&addr, sizeof(addr)) != 0)
+        {
+            printf("connect failed\n");
+            return 1;
+        }
+
+        kp_socket my_socket = kp_socket_wrap(sockfd);
+
+        kp_session session = kp_session_wrap(my_socket);
+
+        kp_status err = kp_session_connect(&session, &keypair_1, NULL);
+
+        char errstr[20];
+        kp_errstr(err, errstr, 20);
+
+        printf("err: %s\n", errstr);
+
+        u8 buffer[1024];
+        kp_size length = 1024;
+        memset(buffer, 0, 1024);
+
+        kp_session_read(&session, buffer, &length);
+
+        printf("read: %s\n", buffer);
+
+        kp_session_close(&session);
     }
-
-    if (listen(sockfd, 3) != 0)
-    {
-        printf("listen failed\n");
-        return 1;
-    }
-
-    int clientfd = accept(sockfd, NULL, NULL);
-
-    kp_session session = kp_session_wrap(kp_socket_wrap(clientfd));
-
-    kp_status err = kp_session_accept(&session, &keypair_1, NULL);
-
-    char errstr[20];
-    kp_errstr(err, errstr, 20);
-
-    printf("err: %s\n", errstr);
-
-    kp_session_close(&session);
-
-    close(clientfd);
-
-    close(sockfd);
 
     kp_library_deinit(0);
 

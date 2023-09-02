@@ -32,7 +32,7 @@ extern "C"
         /// @param ptr The pointer to the memory to reallocate
         /// @param size The new size of the memory
         /// @return A pointer to the reallocated memory
-        /// @warning This function is OPTIONAL
+        /// @warning This function is REQUIRED
         void *(*kp_realloc_fn)(void *ptr, kp_size size);
 
         /// @brief The function to use for memory deallocation

@@ -23,7 +23,6 @@ void kp_x25519_generate_keypair(kp_ec_keypair *keypair)
 
     keypair->private_key.key.fn->alloc(&keypair->private_key.key, NULL, 32);
 
-    // kp_rng_generate_buffer(&keypair->private_key.key, 32);
     kp_rng_generate(keypair->private_key.key.data, 32);
 
     keypair->private_key.key.fn->set_sensitive(&keypair->private_key.key, TRUE);
@@ -91,7 +90,6 @@ void kp_ed25519_generate_keypair(kp_ec_keypair *keypair)
 
     keypair->private_key.key.fn->alloc(&keypair->private_key.key, NULL, 32);
 
-    // kp_rng_generate_buffer(&keypair->private_key.key, 32);
     kp_rng_generate(keypair->private_key.key.data, 32);
 
     keypair->private_key.key.fn->set_sensitive(&keypair->private_key.key, TRUE);
@@ -111,7 +109,6 @@ void kp_ed25519_derive_public_key(const kp_ec_private_key *private_key, kp_ec_pu
 
 void kp_ed25519_sign(const kp_ec_keypair *keypair, const kp_buffer *message, kp_ecdsa_signature *signature)
 {
-    // void ed25519_sign(uint8_t sig[64], const uint8_t sec[32], const uint8_t pub[32], const uint8_t *data, size_t len);
     kp_buffer_init(&signature->signature);
 
     signature->signature.fn->alloc(&signature->signature, NULL, 64);
