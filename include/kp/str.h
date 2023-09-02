@@ -29,4 +29,4 @@ void kp_hex2bin(const s8 *hex, kp_size hex_len, void *bin);
 }
 #endif // __cplusplus
 
-#endif // __KINGPIN_RNG_H_
+#endif // __KINGPIN_STR_H_

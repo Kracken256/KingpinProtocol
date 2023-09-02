@@ -22,4 +22,4 @@ extern "C"
 }
 #endif // __cplusplus
 
-#endif // __KINGPIN_H_
+#endif // __KINGPIN_INIT_H_
