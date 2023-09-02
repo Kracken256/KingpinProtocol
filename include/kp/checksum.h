@@ -1,5 +1,5 @@
-#ifndef __KINGPIN_SHA256_H_
-#define __KINGPIN_SHA256_H_
+#ifndef __KINGPIN_CHECKSUM_H_
+#define __KINGPIN_CHECKSUM_H_
 
 #ifdef __cplusplus
 extern "C"
@@ -42,4 +42,4 @@ extern "C"
 }
 #endif // __cplusplus
 
-#endif // __KINGPIN_SHA256_H_
+#endif // __KINGPIN_CHECKSUM_H_
