@@ -4,6 +4,8 @@
  */
 
 /* $OpenBSD: poly1305.c,v 1.3 2013/12/19 22:57:13 djm Exp $ */
+/// Modified from: https://github.com/jonasschnelli/chacha20poly1305
+
 
 #include <kp/cipher/poly1305.h>
 
@@ -22,8 +24,8 @@
         (p)[3] = (u8)((v) >> 24); \
     } while (0)
 
-void poly1305_auth(unsigned char out[POLY1305_TAGLEN], const unsigned char *m,
-                   kp_size inlen, const unsigned char key[POLY1305_KEYLEN])
+void kp_poly1305_auth(u8 out[KP_POLY1305_TAGLEN], const u8 *m,
+                   kp_size inlen, const u8 key[KP_POLY1305_KEYLEN])
 {
     u32 t0, t1, t2, t3;
     u32 h0, h1, h2, h3, h4;
@@ -35,7 +37,7 @@ void poly1305_auth(unsigned char out[POLY1305_TAGLEN], const unsigned char *m,
     u64 f0, f1, f2, f3;
     u32 g0, g1, g2, g3, g4;
     u64 c;
-    unsigned char mp[16];
+    u8 mp[16];
 
     /* clamp key */
     t0 = U8TO32_LE(key + 0);

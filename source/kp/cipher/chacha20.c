@@ -3,6 +3,8 @@ chacha-merged.c version 20080118
 D. J. Bernstein
 Public domain.
 */
+/// Modified from: https://github.com/jonasschnelli/chacha20poly1305
+
 
 #include <kp/cipher/chacha20.h>
 
@@ -49,9 +51,9 @@ typedef struct chacha_ctx chacha_ctx;
 static const char sigma[16] = "expand 32-byte k";
 static const char tau[16] = "expand 16-byte k";
 
-void chacha_keysetup(chacha_ctx *x, const u8 *k, u32 kbits)
+void kp_chacha_keysetup(struct kp_chacha_ctx *x, const u8 *k, u32 kbits)
 {
-    const char *constants;
+    const s8 *constants;
 
     x->input[4] = U8TO32_LITTLE(k + 0);
     x->input[5] = U8TO32_LITTLE(k + 4);
@@ -76,7 +78,7 @@ void chacha_keysetup(chacha_ctx *x, const u8 *k, u32 kbits)
     x->input[3] = U8TO32_LITTLE(constants + 12);
 }
 
-void chacha_ivsetup(chacha_ctx *x, const u8 *iv, const u8 *counter)
+void kp_chacha_ivsetup(struct kp_chacha_ctx *x, const u8 *iv, const u8 *counter)
 {
     x->input[12] = counter == NULL ? 0 : U8TO32_LITTLE(counter + 0);
     x->input[13] = counter == NULL ? 0 : U8TO32_LITTLE(counter + 4);
@@ -84,7 +86,7 @@ void chacha_ivsetup(chacha_ctx *x, const u8 *iv, const u8 *counter)
     x->input[15] = U8TO32_LITTLE(iv + 4);
 }
 
-void chacha_encrypt_bytes(chacha_ctx *x, const u8 *m, u8 *c, u32 bytes)
+void kp_chacha_encrypt_bytes(struct kp_chacha_ctx *x, const u8 *m, u8 *c, u32 bytes)
 {
     u32 x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15;
     u32 j0, j1, j2, j3, j4, j5, j6, j7, j8, j9, j10, j11, j12, j13, j14, j15;
