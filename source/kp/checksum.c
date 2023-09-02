@@ -17,9 +17,9 @@ static inline u32 step2(u32 a, u32 b, u32 c)
     return (rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22)) + ((a & b) ^ (a & c) ^ (b & c));
 }
 
-static inline void update_w(u32 *w, int i, const u8 *buffer)
+static inline void update_w(u32 *w, s32 i, const u8 *buffer)
 {
-    int j;
+    s32 j;
     for (j = 0; j < 16; j++)
     {
         if (i < 16)
@@ -124,7 +124,7 @@ static void sha256_block(kp_sha256_ctx *sha)
 
     u32 w[16];
 
-    int i, j;
+    s32 i, j;
     for (i = 0; i < 64; i += 16)
     {
         update_w(w, i, sha->buffer);
@@ -197,7 +197,7 @@ void kp_sha256_update(kp_sha256_ctx *ctx, const void *data, kp_size n_bytes)
 void kp_sha256_final(kp_sha256_ctx *ctx, void *dst_bytes32)
 {
     u8 *ptr = (u8 *)dst_bytes32;
-    int i, j;
+    s32 i, j;
     u64 n_bits = ctx->n_bits;
 
     sha256_append_byte(ctx, 0x80);
