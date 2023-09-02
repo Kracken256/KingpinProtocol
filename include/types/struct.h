@@ -32,7 +32,7 @@ extern "C"
         /// @param ptr The pointer to the memory to reallocate
         /// @param size The new size of the memory
         /// @return A pointer to the reallocated memory
-        /// @warning This function is REQUIRED
+        /// @warning This function is OPTIONAL
         void *(*kp_realloc_fn)(void *ptr, kp_size size);
 
         /// @brief The function to use for memory deallocation
@@ -40,17 +40,12 @@ extern "C"
         /// @warning This function is REQUIRED
         void (*kp_free_fn)(void *ptr);
 
-        /// @brief The function to use for logging
-        /// @param message The message to log
-        /// @warning This function is REQUIRED
-        s32 (*kp_log_fn)(const char *fmt, ...);
-
         /// @brief The function to use for memory copying
         /// @param dest The destination memory
         /// @param src The source memory
         /// @param size The size of the memory to copy
         /// @return A pointer to the destination memory
-        /// @warning This function is REQUIRED
+        /// @warning This function is OPTIONAL
         void *(*kp_memcpy_fn)(void *dest, const void *src, kp_size size);
 
         /// @brief The function to use for memory setting
@@ -58,7 +53,7 @@ extern "C"
         /// @param value The value to set the memory to
         /// @param size The size of the memory to set
         /// @return A pointer to the destination memory
-        /// @warning This function is REQUIRED
+        /// @warning This function is OPTIONAL
         void *(*kp_memset_fn)(void *dest, s32 value, kp_size size);
 
         /// @brief The function to use for memory comparison
@@ -66,7 +61,7 @@ extern "C"
         /// @param src The source memory
         /// @param size The size of the memory to compare
         /// @return A pointer to the destination memory
-        /// @warning This function is REQUIRED
+        /// @warning This function is OPTIONAL
         s32 (*kp_memcmp_fn)(const void *dest, const void *src, kp_size size);
 
         /// @brief The function to use for memory moving
@@ -74,7 +69,7 @@ extern "C"
         /// @param src The source memory
         /// @param size The size of the memory to move
         /// @return A pointer to the destination memory
-        /// @warning This function is REQUIRED
+        /// @warning This function is OPTIONAL
         void *(*kp_memmove_fn)(void *dest, const void *src, kp_size size);
 
         /// @brief The function to use for getting entropy (cryptographically secure random data) for the internal RNG

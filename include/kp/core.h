@@ -34,6 +34,8 @@ extern "C"
 
     void kp_strncpy(s8 *dest, const s8 *src, kp_size size);
 
+    kp_size kp_get_entropy(u8 *bytes, kp_size size);
+
 #ifdef __cplusplus
 }
 #endif // __cplusplus

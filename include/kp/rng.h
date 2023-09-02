@@ -18,10 +18,6 @@ extern "C"
 
     void kp_rng_generate(u8 *buffer, kp_size buffer_size);
 
-    void kp_rng_reseed(const void *entropy, kp_size entropy_size);
-
-    void kp_rng_generate_buffer(kp_buffer *buffer, kp_size buffer_size);
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus

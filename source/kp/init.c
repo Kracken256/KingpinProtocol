@@ -60,42 +60,6 @@ static boolean kp_dep_check(const kp_dependency *d)
         goto exit;
     }
 
-    if (d->kp_realloc_fn == NULL)
-    {
-        status = FALSE;
-        goto exit;
-    }
-
-    if (d->kp_memcmp_fn == NULL)
-    {
-        status = FALSE;
-        goto exit;
-    }
-
-    if (d->kp_memcpy_fn == NULL)
-    {
-        status = FALSE;
-        goto exit;
-    }
-
-    if (d->kp_memset_fn == NULL)
-    {
-        status = FALSE;
-        goto exit;
-    }
-
-    if (d->kp_memmove_fn == NULL)
-    {
-        status = FALSE;
-        goto exit;
-    }
-
-    if (d->kp_log_fn == NULL)
-    {
-        status = FALSE;
-        goto exit;
-    }
-
     if (d->kp_get_entropy_fn == NULL)
     {
         status = FALSE;

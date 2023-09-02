@@ -23,7 +23,8 @@ void kp_x25519_generate_keypair(kp_ec_keypair *keypair)
 
     keypair->private_key.key.fn->alloc(&keypair->private_key.key, NULL, 32);
 
-    kp_rng_generate_buffer(&keypair->private_key.key, 32);
+    // kp_rng_generate_buffer(&keypair->private_key.key, 32);
+    kp_rng_generate(keypair->private_key.key.data, 32);
 
     keypair->private_key.key.fn->set_sensitive(&keypair->private_key.key, TRUE);
 
@@ -90,7 +91,8 @@ void kp_ed25519_generate_keypair(kp_ec_keypair *keypair)
 
     keypair->private_key.key.fn->alloc(&keypair->private_key.key, NULL, 32);
 
-    kp_rng_generate_buffer(&keypair->private_key.key, 32);
+    // kp_rng_generate_buffer(&keypair->private_key.key, 32);
+    kp_rng_generate(keypair->private_key.key.data, 32);
 
     keypair->private_key.key.fn->set_sensitive(&keypair->private_key.key, TRUE);
 

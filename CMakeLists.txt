@@ -25,9 +25,8 @@ add_library(kingpin-static ${SOURCES} ${HEADERS})
 # Shared lib
 add_library(kingpin SHARED ${SOURCES} ${HEADERS})
 
-add_executable(test ${TEST_SOURCES} libkingpin-static.a )
+target_link_libraries(kingpin-static PRIVATE ${LIBEDDSA_STATIC})
+
+add_executable(test ${TEST_SOURCES} ${CMAKE_BUILD_DIR/libkingpin-static.a})
 
 target_link_libraries(test kingpin-static)
-
-
-target_link_libraries(kingpin-static PRIVATE ${LIBEDDSA_STATIC})
