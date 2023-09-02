@@ -8,15 +8,12 @@
 #ifndef POLY1305_H
 #define POLY1305_H
 
-#include <kp/types/basic.h>
+#include <kp/types/kp.h>
 
 #define POLY1305_KEYLEN 32
 #define POLY1305_TAGLEN 16
 
 void poly1305_auth(u8 out[POLY1305_TAGLEN], const u8 *m, kp_size inlen,
-                   const u8 key[POLY1305_KEYLEN])
-    __attribute__((__bounded__(__minbytes__, 1, POLY1305_TAGLEN)))
-    __attribute__((__bounded__(__buffer__, 2, 3)))
-    __attribute__((__bounded__(__minbytes__, 4, POLY1305_KEYLEN)));
+                   const u8 key[POLY1305_KEYLEN]);
 
 #endif /* POLY1305_H */

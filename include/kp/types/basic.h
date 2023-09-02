@@ -46,6 +46,8 @@ extern "C"
     /// @brief Standard size type
     typedef u64 kp_size;
 
+    #define KP_UINT64_MAX 0xFFFFFFFFFFFFFFFF
+
 /// @brief Boolean true
 #define TRUE ((u8)1)
 

@@ -1,7 +1,7 @@
 #ifndef CHACHA20_POLY_AEAD_H
 #define CHACHA20_POLY_AEAD_H
 
-#include <kp/types/basic.h>
+#include <kp/types/kp.h>
 #include <kp/cipher/chacha20.h>
 
 #define CHACHA_KEYLEN 32 /* 2 x 256 bit keys */
