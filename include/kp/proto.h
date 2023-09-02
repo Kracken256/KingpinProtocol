@@ -10,30 +10,43 @@ extern "C"
 {
 #endif // __cplusplus
 
-#include <types/kp.h>
+#include <types/err.h>
+#include <kp/buffer.h>
 #include <types/ec-types.h>
 
-    typedef struct _kp_connect_msg
-    {
-        u32 proclamation;
-        u8 sess_tp;
-        kp_ec_public_key pubkey;
-        kp_ecdsa_signature sig;
-    } kp_connect_msg;
-
-    /// @brief Initialize a Kingpin protocol connect message structure
-    /// @param msg The message structure to initialize
+    /// @brief Initialize a Kingpin protocol connect message buffer
+    /// @param msg The buffer to store the message in
     /// @param proclamation The proclamation to use
     /// @param sess_tp The session type to use
-    /// @param pubkey The keypair to use
+    /// @param keypair The X25519 keypair to use
     /// @return KP_SUCCESS on success, an error code otherwise
-    kp_status kp_init_connect_msg(kp_connect_msg *msg, u32 proclamation, u8 sess_tp, const kp_ec_keypair *keypair);
+    kp_status kp_syn_init_msg(kp_buffer *buffer, u32 id, const kp_ec_keypair *keypair);
 
-    /// @brief Synthesize a Kingpin protocol connect message, for transmission by user
-    /// @param buffer The buffer structure to use for the message
-    /// @param msg The connect message to synthesize
+    /// @brief Initialize a Kingpin protocol response message buffer
+    /// @param msg The buffer to store the message in
+    /// @param keypair The X25519 keypair to use
     /// @return KP_SUCCESS on success, an error code otherwise
-    kp_status kp_syn_connect(kp_buffer *buffer, const kp_connect_msg *msg);
+    kp_status kp_syn_resp_msg(kp_buffer *buffer, u32 id, const kp_ec_keypair *keypair);
+
+    /// @brief Initialize a Kingpin protocol ack message buffer
+    /// @param msg The buffer to store the message in
+    /// @param flags The flags to use
+    /// @param data Optional data buffer to compute the CRC32 of
+    /// @param crc32 Required if data is NULL, otherwise ignored
+    /// @return KP_SUCCESS on success, an error code otherwise
+    kp_status kp_syn_ack_msg(kp_buffer *buffer, u16 flags, kp_buffer *data, u32 crc32);
+
+    /// @brief Initialize a Kingpin protocol data message buffer
+    /// @param msg The buffer to store the message in
+    /// @param flags The flags to use
+    /// @param len The data to send 24 bits field
+    kp_status kp_syn_dat_msg(kp_buffer *buffer, u16 flags, u32 len);
+
+    /// @brief Initialize a Kingpin protocol fin message buffer
+    /// @param msg The buffer to store the message in
+    /// @param flags The flags to use
+    /// @return KP_SUCCESS on success, an error code otherwise
+    kp_status kp_syn_fin_msg(kp_buffer *buffer, u16 flags);
 
 #ifdef __cplusplus
 }

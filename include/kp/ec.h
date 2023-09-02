@@ -12,8 +12,11 @@ extern "C"
 
 #include <types/basic.h>
 #include <types/struct.h>
-#include <types/enum.h>
+#include <types/err.h>
 #include <types/ec-types.h>
+
+#define KP_SHA256_DIGEST_SIZE 32
+#define KP_ECDH_SECRET_SIZE 32
 
     void kp_x25519_generate_keypair(kp_ec_keypair *keypair);
 
@@ -21,7 +24,9 @@ extern "C"
 
     void kp_x25519_derive_shared_secret(const kp_ec_private_key *private_key, const kp_ec_public_key *public_key, kp_ecdh_secret *shared_secret);
 
-    void kp_ec_fingerprint(const kp_ec_public_key *public_key, kp_buffer *fingerprint);
+    void kp_ec_fingerprint(const kp_ec_public_key *public_key, kp_fingerprint *fingerprint);
+
+    boolean kp_ec_fingerprint_compare(const kp_fingerprint *fingerprint1, const kp_fingerprint *fingerprint2);
 
     void kp_ed25519_generate_keypair(kp_ec_keypair *keypair);
 

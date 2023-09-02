@@ -25,7 +25,7 @@ extern "C"
     void kp_sha256_update(kp_sha256_ctx *ctx, const void *data, kp_size n_bytes);
     void kp_sha256_final(kp_sha256_ctx *ctx, void *dst_bytes32);
 
-    void kp_sha256_digest(const void *src, kp_size n_bytes, void *dst_bytes32);
+    void kp_sha256(const void *src, kp_size n_bytes, void *dst_bytes32);
 
     typedef struct _kp_crc32_ctx
     {
@@ -36,7 +36,7 @@ extern "C"
     void kp_crc32_update(kp_crc32_ctx *ctx, const void *data, kp_size n_bytes);
     void kp_crc32_final(kp_crc32_ctx *ctx, u32 *dst_crc32);
 
-    u32 kp_crc32_digest(const void *src, kp_size n_bytes);
+    u32 kp_crc32(const void *src, kp_size n_bytes);
 
 #ifdef __cplusplus
 }

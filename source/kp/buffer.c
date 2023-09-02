@@ -24,6 +24,15 @@ static void kp_buffer_alloc(kp_buffer *self, const u8 *data, kp_size length)
     if (!self)
         return;
 
+    if (self->data && length > self->capacity)
+    {
+        self->data = kp_realloc(self->data, length);
+        self->capacity = length;
+        self->size = length;
+
+        return;
+    }
+
     if (self->data)
         self->fn->free(self);
 
@@ -181,12 +190,6 @@ static void kp_buffer_set_sensitive(kp_buffer *self, boolean sensitive)
 
 void kp_buffer_init(kp_buffer *buffer)
 {
-    /// @note If already initialized, free the buffer, then reinitialize it.
-    if (buffer && buffer->fn && buffer->fn->alloc == kp_buffer_alloc && buffer->data)
-    {
-        buffer->fn->free(buffer);
-    }
-
     buffer->fn = &reuse_kp_buffer_methods;
     buffer->data = NULL;
     buffer->size = 0;

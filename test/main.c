@@ -3,6 +3,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 void print_buffer(kp_buffer *buffer)
 {
@@ -56,31 +59,55 @@ int main()
     kp_library_init(&dep);
 
     kp_ec_keypair keypair_1;
-    kp_ec_keypair keypair_2;
 
     kp_x25519_generate_keypair(&keypair_1);
-    kp_x25519_generate_keypair(&keypair_2);
 
-    kp_buffer init_msg;
-    kp_buffer resp_msg;
+    print_buffer(&keypair_1.private_key.key);
+    print_buffer(&keypair_1.public_key.key);
 
-    kp_syn_init_msg(&init_msg, 0xdeadbeef, 0x01, &keypair_1);
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
-    kp_syn_resp_msg(&resp_msg, &keypair_2);
+    struct sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(4444);
+    addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    print_buffer(&init_msg);
-    print_buffer(&resp_msg);
-    
+    int true = 1;
 
-    kp_ecdh_secret secret_1;
-    kp_ecdh_secret secret_2;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &true, sizeof(int)) == -1)
+    {
+        perror("Setsockopt");
+        exit(1);
+    }
 
-    kp_x25519_derive_shared_secret(&keypair_1.private_key, &keypair_2.public_key, &secret_1);
+    if (bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) != 0)
+    {
+        printf("bind failed\n");
+        return 1;
+    }
 
-    kp_x25519_derive_shared_secret(&keypair_2.private_key, &keypair_1.public_key, &secret_2);
+    if (listen(sockfd, 3) != 0)
+    {
+        printf("listen failed\n");
+        return 1;
+    }
 
-    print_buffer(&secret_1.secret);
-    print_buffer(&secret_2.secret);
+    int clientfd = accept(sockfd, NULL, NULL);
+
+    kp_session session = kp_session_wrap(kp_socket_wrap(clientfd));
+
+    kp_status err = kp_session_accept(&session, &keypair_1, NULL);
+
+    char errstr[20];
+    kp_errstr(err, errstr, 20);
+
+    printf("err: %s\n", errstr);
+
+    kp_session_close(&session);
+
+    close(clientfd);
+
+    close(sockfd);
 
     kp_library_deinit(0);
 

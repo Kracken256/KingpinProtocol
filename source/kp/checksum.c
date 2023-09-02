@@ -222,7 +222,7 @@ void kp_sha256_final(kp_sha256_ctx *ctx, void *dst_bytes32)
     }
 }
 
-void kp_sha256_digest(const void *src, kp_size n_bytes, void *dst_bytes32)
+void kp_sha256(const void *src, kp_size n_bytes, void *dst_bytes32)
 {
     kp_sha256_ctx ctx;
     kp_sha256_init(&ctx);
@@ -510,7 +510,7 @@ void kp_crc32_final(kp_crc32_ctx *ctx, u32 *dst_crc32)
     *dst_crc32 = ctx->crc ^ 0xffffffff;
 }
 
-u32 kp_crc32_digest(const void *src, kp_size n_bytes)
+u32 kp_crc32(const void *src, kp_size n_bytes)
 {
     kp_crc32_ctx ctx;
     kp_crc32_init(&ctx);

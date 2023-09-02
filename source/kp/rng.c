@@ -16,7 +16,7 @@ kp_status kp_library_rng_init(const void *entropy, kp_size entropy_size)
 {
     kp_rng.index = 0;
 
-    kp_sha256_digest(entropy, entropy_size, kp_rng.state);
+    kp_sha256(entropy, entropy_size, kp_rng.state);
 
     return KP_SUCCESS;
 }
@@ -25,19 +25,19 @@ void kp_rng_reseed(const void *entropy, kp_size entropy_size)
 {
     u8 digest[32];
 
-    kp_sha256_digest(entropy, entropy_size, digest);
+    kp_sha256(entropy, entropy_size, digest);
 
     for (u8 i = 0; i < 32; i++)
         kp_rng.state[i] ^= digest[i];
 
-    kp_sha256_digest(kp_rng.state, 32, kp_rng.state);
+    kp_sha256(kp_rng.state, 32, kp_rng.state);
 
     kp_rng.index = 0;
 }
 
 void kp_rng_update_state()
 {
-    kp_sha256_digest(kp_rng.state, 32, kp_rng.state);
+    kp_sha256(kp_rng.state, 32, kp_rng.state);
     kp_rng.index += 32;
 
     if (kp_rng.index >= 256)

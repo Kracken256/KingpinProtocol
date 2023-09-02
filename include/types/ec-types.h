@@ -49,6 +49,11 @@ extern "C"
         kp_buffer signature;
     } kp_ecdsa_signature;
 
+    typedef struct _kp_fingerprint
+    {
+        u8 data[32];
+    } kp_fingerprint;
+
 #ifdef __cplusplus
 }
 #endif // __cplusplus

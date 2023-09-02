@@ -13,19 +13,19 @@ extern "C"
 #include <types/kp.h>
 
 /// @brief The magic number for the Kingpin protocol init
-#define KP_PROTO_INIT_MAGIC 0x4B50
+#define KP_PROTO_INIT_MAGIC 0xD350
 
 /// @brief The magic number for the Kingpin protocol handshake response
-#define KP_PROTO_HANDSHAKE_RESP_MAGIC 0x4B52
+#define KP_PROTO_HANDSHAKE_RESP_MAGIC 0xD352
 
 /// @brief The magic number for the Kingpin protocol ack
-#define KP_PROTO_ACK_MAGIC 0x4B51
+#define KP_PROTO_ACK_MAGIC 0xD351
 
 /// @brief The magic number for the Kingpin protocol data
-#define KP_PROTO_DAT_MAGIC 0x4B53
+#define KP_PROTO_DAT_MAGIC 0xD353
 
 /// @brief The magic number for the Kingpin protocol fin
-#define KP_PROTO_FIN_MAGIC 0x4B54
+#define KP_PROTO_FIN_MAGIC 0xD354
 
 /// @brief The Kingpin protocol version
 #define KP_PROTO_VERSION ((u16)0x01)
@@ -42,10 +42,8 @@ extern "C"
     {
         u16 magic;
         u16 version;
-        u32 proclamation;
-        u8 sess_tp;
+        u32 id;
         u8 pubkey[32];
-        u8 sig[64];
     } __attribute((packed)) kp_proto_handshake_init_sp;
 
     typedef struct _kp_proto_ack
@@ -58,8 +56,8 @@ extern "C"
     typedef struct _kp_proto_handshake_resp
     {
         u16 magic;
+        u32 id;
         u8 pubkey[32];
-        u8 sig[64];
     } __attribute((packed)) kp_proto_handshake_resp_sp;
 
     typedef struct _kp_proto_dat

@@ -12,7 +12,7 @@ extern "C"
 
 #include <types/basic.h>
 #include <types/struct.h>
-#include <types/enum.h>
+#include <types/err.h>
 
     kp_status kp_library_init(const kp_dependency *dependency);
 

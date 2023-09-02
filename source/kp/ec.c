@@ -52,13 +52,11 @@ void kp_x25519_derive_shared_secret(const kp_ec_private_key *private_key, const 
 
     x25519(shared_secret->secret.data, private_key->key.data, public_key->key.data);
 
-    kp_sha256_digest(shared_secret->secret.data, 32, shared_secret->secret.data);
+    kp_sha256(shared_secret->secret.data, 32, shared_secret->secret.data);
 }
 
-void kp_ec_fingerprint(const kp_ec_public_key *public_key, kp_buffer *fingerprint)
+void kp_ec_fingerprint(const kp_ec_public_key *public_key, kp_fingerprint *fingerprint)
 {
-    kp_buffer_init(fingerprint);
-
     u8 pubkey_size;
 
     switch (public_key->curve)
@@ -73,9 +71,12 @@ void kp_ec_fingerprint(const kp_ec_public_key *public_key, kp_buffer *fingerprin
         return;
     }
 
-    fingerprint->fn->alloc(fingerprint, NULL, 32);
+    kp_sha256(public_key->key.data, pubkey_size, fingerprint->data);
+}
 
-    kp_sha256_digest(public_key->key.data, pubkey_size, fingerprint->data);
+boolean kp_ec_fingerprint_compare(const kp_fingerprint *fingerprint1, const kp_fingerprint *fingerprint2)
+{
+    return kp_memcmp(fingerprint1->data, fingerprint2->data, 32) == 0;
 }
 
 void kp_ed25519_generate_keypair(kp_ec_keypair *keypair)

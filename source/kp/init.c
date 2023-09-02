@@ -34,6 +34,9 @@ kp_status kp_library_init(const kp_dependency *dependency)
 
     if (!kp_ec_init())
         return KP_INTERNAL_ERROR;
+    
+    if (!kp_library_session_init())
+        return KP_INTERNAL_ERROR;
 
     return KP_SUCCESS;
 }

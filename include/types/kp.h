@@ -7,7 +7,7 @@ extern "C"
 #endif // __cplusplus
 
 #include <types/basic.h>
-#include <types/enum.h>
+#include <types/err.h>
 #include <types/struct.h>
 
 

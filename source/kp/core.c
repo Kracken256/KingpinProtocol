@@ -21,7 +21,7 @@ inline void kp_free(void *ptr)
     gKP_dependency_config.kp_free_fn(ptr);
 }
 
-inline void kp_log(const char *fmt, ...)
+inline void kp_log(const s8 *fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
@@ -49,7 +49,26 @@ inline void *kp_memmove(void *dest, const void *src, kp_size size)
     return gKP_dependency_config.kp_memmove_fn(dest, src, size);
 }
 
+void kp_memscrub(void *ptr, kp_size size)
+{
+    u8 *ptr8 = (u8 *)ptr;
+
+    kp_memset(ptr8, 0, size);
+}
+
 void kp_set_dependency_config(const kp_dependency *config)
 {
     gKP_dependency_config = *config;
+}
+
+void kp_strncpy(s8 *dest, const s8 *src, kp_size size)
+{
+    kp_size i = 0;
+
+    for (; i < size - 1 && src[i] != '\0'; i++)
+    {
+        dest[i] = src[i];
+    }
+
+    dest[i] = '\0';
 }

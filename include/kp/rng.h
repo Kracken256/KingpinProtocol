@@ -12,7 +12,7 @@ extern "C"
 
 #include <types/basic.h>
 #include <kp/buffer.h>
-#include <types/enum.h>
+#include <types/err.h>
 
     kp_status kp_library_rng_init(const void *entropy, kp_size entropy_size);
 
