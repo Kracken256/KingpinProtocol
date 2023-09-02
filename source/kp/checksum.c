@@ -2,22 +2,24 @@
 
 #include <kp/checksum.h>
 
-static inline u32 rotr(u32 x, int n)
+/// Public domain SHA256 implementation https://github.com/983/SHA-256
+
+static inline u32 kp_sha256_rotr(u32 x, int n)
 {
     return (x >> n) | (x << (32 - n));
 }
 
-static inline u32 step1(u32 e, u32 f, u32 g)
+static inline u32 kp_sha256_step1(u32 e, u32 f, u32 g)
 {
     return (rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25)) + ((e & f) ^ ((~e) & g));
 }
 
-static inline u32 step2(u32 a, u32 b, u32 c)
+static inline u32 kp_sha256_step2(u32 a, u32 b, u32 c)
 {
     return (rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22)) + ((a & b) ^ (a & c) ^ (b & c));
 }
 
-static inline void update_w(u32 *w, s32 i, const u8 *buffer)
+static inline void kp_sha256_update_w(u32 *w, s32 i, const u8 *buffer)
 {
     s32 j;
     for (j = 0; j < 16; j++)
@@ -42,7 +44,7 @@ static inline void update_w(u32 *w, s32 i, const u8 *buffer)
     }
 }
 
-static void sha256_block(kp_sha256_ctx *sha)
+static void kp_sha256_block(kp_sha256_ctx *sha)
 {
     u32 *state = sha->state;
 
