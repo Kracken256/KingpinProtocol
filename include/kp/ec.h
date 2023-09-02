@@ -10,10 +10,10 @@ extern "C"
 #error "Do not include this file directly. Include kingpin.h instead."
 #endif // __KINGPIN_H_
 
-#include <types/basic.h>
-#include <types/struct.h>
-#include <types/err.h>
-#include <types/ec-types.h>
+#include <kp/types/basic.h>
+#include <kp/types/struct.h>
+#include <kp/types/err.h>
+#include <kp/types/ec-types.h>
 
 #define KP_SHA256_DIGEST_SIZE 32
 #define KP_ECDH_SECRET_SIZE 32

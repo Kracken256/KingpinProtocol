@@ -8,7 +8,7 @@
 #ifndef POLY1305_H
 #define POLY1305_H
 
-#include <types/basic.h>
+#include <kp/types/basic.h>
 
 #define POLY1305_KEYLEN 32
 #define POLY1305_TAGLEN 16

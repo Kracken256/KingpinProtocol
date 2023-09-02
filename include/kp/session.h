@@ -10,9 +10,9 @@ extern "C"
 {
 #endif // __cplusplus
 
-#include <types/err.h>
+#include <kp/types/err.h>
 #include <kp/buffer.h>
-#include <types/ec-types.h>
+#include <kp/types/ec-types.h>
 #include <kp/socket.h>
 
     typedef struct _kp_session_keys

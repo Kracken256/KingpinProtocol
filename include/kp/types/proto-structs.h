@@ -10,7 +10,7 @@ extern "C"
 {
 #endif // __cplusplus
 
-#include <types/kp.h>
+#include <kp/types/kp.h>
 
 /// @brief The magic number for the Kingpin protocol init
 #define KP_PROTO_INIT_MAGIC 0xD350

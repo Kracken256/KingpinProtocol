@@ -10,9 +10,9 @@ extern "C"
 #error "Do not include this file directly. Include kingpin.h instead."
 #endif // __KINGPIN_H_
 
-#include <types/basic.h>
-#include <types/struct.h>
-#include <types/err.h>
+#include <kp/types/basic.h>
+#include <kp/types/struct.h>
+#include <kp/types/err.h>
 
     kp_status kp_library_init(const kp_dependency *dependency);
 

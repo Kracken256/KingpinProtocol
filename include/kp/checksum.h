@@ -10,7 +10,7 @@ extern "C"
 #error "Do not include this file directly."
 #endif // !defined(__KINGPIN_BACKEND)
 
-#include <types/basic.h>
+#include <kp/types/basic.h>
 
     typedef struct _kp_sha256_ctx
     {

@@ -10,7 +10,7 @@ extern "C"
 #error "Do not include this file directly."
 #endif // __KINGPIN_H_
 
-#include <types/basic.h>
+#include <kp/types/basic.h>
 
 
 void kp_library_str_init(void);

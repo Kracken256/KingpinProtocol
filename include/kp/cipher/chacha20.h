@@ -9,7 +9,7 @@ Public domain.
 #ifndef CHACHA_H
 #define CHACHA_H
 
-#include <types/basic.h>
+#include <kp/types/basic.h>
 
 struct chacha_ctx
 {

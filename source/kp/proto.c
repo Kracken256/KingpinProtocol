@@ -3,7 +3,7 @@
 #include <kp/proto.h>
 #include <kp/core.h>
 #include <kp/ec.h>
-#include <types/proto-structs.h>
+#include <kp/types/proto-structs.h>
 #include <kp/checksum.h>
 
 kp_status kp_syn_init_msg(kp_buffer *buffer, u32 id, const kp_ec_keypair *keypair)

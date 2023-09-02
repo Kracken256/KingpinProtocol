@@ -3,7 +3,7 @@
 #define __KINGPIN_BACKEND
 #include <kp/proto.h>
 #include <kp/ec.h>
-#include <types/proto-structs.h>
+#include <kp/types/proto-structs.h>
 #include <kp/core.h>
 #include <kp/checksum.h>
 #include <kp/str.h>

@@ -5,7 +5,7 @@
 #error "Do not include this file directly. Include types/kp.h instead."
 #endif // __KINGPIN_KP_H_
 
-#include <types/basic.h>
+#include <kp/types/basic.h>
 
 #ifdef __cplusplus
 extern "C"

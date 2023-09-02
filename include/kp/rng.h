@@ -10,9 +10,9 @@ extern "C"
 #error "Do not include this file directly."
 #endif // __KINGPIN_H_
 
-#include <types/basic.h>
+#include <kp/types/basic.h>
 #include <kp/buffer.h>
-#include <types/err.h>
+#include <kp/types/err.h>
 
     kp_status kp_library_rng_init(const void *entropy, kp_size entropy_size);
 

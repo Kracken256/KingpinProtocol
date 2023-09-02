@@ -6,9 +6,9 @@ extern "C"
 {
 #endif // __cplusplus
 
-#include <types/basic.h>
-#include <types/err.h>
-#include <types/struct.h>
+#include <kp/types/basic.h>
+#include <kp/types/err.h>
+#include <kp/types/struct.h>
 
 
 #ifdef __cplusplus
