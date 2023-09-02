@@ -11,12 +11,12 @@ static inline u32 kp_sha256_rotr(u32 x, int n)
 
 static inline u32 kp_sha256_step1(u32 e, u32 f, u32 g)
 {
-    return (rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25)) + ((e & f) ^ ((~e) & g));
+    return (kp_sha256_rotr(e, 6) ^ kp_sha256_rotr(e, 11) ^ kp_sha256_rotr(e, 25)) + ((e & f) ^ ((~e) & g));
 }
 
 static inline u32 kp_sha256_step2(u32 a, u32 b, u32 c)
 {
-    return (rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22)) + ((a & b) ^ (a & c) ^ (b & c));
+    return (kp_sha256_rotr(a, 2) ^ kp_sha256_rotr(a, 13) ^ kp_sha256_rotr(a, 22)) + ((a & b) ^ (a & c) ^ (b & c));
 }
 
 static inline void kp_sha256_update_w(u32 *w, s32 i, const u8 *buffer)
@@ -37,8 +37,8 @@ static inline void kp_sha256_update_w(u32 *w, s32 i, const u8 *buffer)
         {
             u32 a = w[(j + 1) & 15];
             u32 b = w[(j + 14) & 15];
-            u32 s0 = (rotr(a, 7) ^ rotr(a, 18) ^ (a >> 3));
-            u32 s1 = (rotr(b, 17) ^ rotr(b, 19) ^ (b >> 10));
+            u32 s0 = (kp_sha256_rotr(a, 7) ^ kp_sha256_rotr(a, 18) ^ (a >> 3));
+            u32 s1 = (kp_sha256_rotr(b, 17) ^ kp_sha256_rotr(b, 19) ^ (b >> 10));
             w[j] += w[(j + 9) & 15] + s0 + s1;
         }
     }
@@ -129,23 +129,23 @@ static void kp_sha256_block(kp_sha256_ctx *sha)
     s32 i, j;
     for (i = 0; i < 64; i += 16)
     {
-        update_w(w, i, sha->buffer);
+        kp_sha256_update_w(w, i, sha->buffer);
 
         for (j = 0; j < 16; j += 4)
         {
             u32 temp;
-            temp = h + step1(e, f, g) + k[i + j + 0] + w[j + 0];
+            temp = h + kp_sha256_step1(e, f, g) + k[i + j + 0] + w[j + 0];
             h = temp + d;
-            d = temp + step2(a, b, c);
-            temp = g + step1(h, e, f) + k[i + j + 1] + w[j + 1];
+            d = temp + kp_sha256_step2(a, b, c);
+            temp = g + kp_sha256_step1(h, e, f) + k[i + j + 1] + w[j + 1];
             g = temp + c;
-            c = temp + step2(d, a, b);
-            temp = f + step1(g, h, e) + k[i + j + 2] + w[j + 2];
+            c = temp + kp_sha256_step2(d, a, b);
+            temp = f + kp_sha256_step1(g, h, e) + k[i + j + 2] + w[j + 2];
             f = temp + b;
-            b = temp + step2(c, d, a);
-            temp = e + step1(f, g, h) + k[i + j + 3] + w[j + 3];
+            b = temp + kp_sha256_step2(c, d, a);
+            temp = e + kp_sha256_step1(f, g, h) + k[i + j + 3] + w[j + 3];
             e = temp + a;
-            a = temp + step2(b, c, d);
+            a = temp + kp_sha256_step2(b, c, d);
         }
     }
 
@@ -181,7 +181,7 @@ void sha256_append_byte(kp_sha256_ctx *sha, u8 byte)
     if (sha->buffer_counter == 64)
     {
         sha->buffer_counter = 0;
-        sha256_block(sha);
+        kp_sha256_block(sha);
     }
 }
 
