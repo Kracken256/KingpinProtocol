@@ -49,6 +49,11 @@ void *kp_memmove_basic(void *dest, const void *src, kp_size size)
     u8 *dest8 = (u8 *)dest;
     const u8 *src8 = (const u8 *)src;
 
+    if (size == 0)
+    {
+        return dest;
+    }
+
     if (dest8 < src8)
     {
         for (kp_size i = 0; i < size; i++)
