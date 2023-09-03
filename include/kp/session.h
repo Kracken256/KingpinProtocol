@@ -28,8 +28,7 @@ extern "C"
         KP_SESSION_NOT_STARTED = 0,
         KP_SESSION_STARTED = 100,
         KP_SESSION_ESTABLISHED = 200,
-        KP_SESSION_ENDED = 300,
-        KP_SESSION_ERROR = 400
+        KP_SESSION_ENDED = 300
     } kp_session_status;
 
     typedef struct _kp_peers_allowed

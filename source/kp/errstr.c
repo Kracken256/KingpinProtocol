@@ -64,6 +64,21 @@ void kp_errstr(kp_status err, char *buf, kp_size maxlen)
     case KP_SESSION_PEER_NOT_ALLOWED:
         kp_strncpy(buf, "Session peer not allowed", maxlen);
         break;
+    case KP_SESSION_MAC_MISMATCH:
+        kp_strncpy(buf, "Session MAC mismatch", maxlen);
+        break;
+    case KP_SESSION_CLOSED:
+        kp_strncpy(buf, "Session closed", maxlen);
+        break;
+    case KP_SESSION_READ_ERROR:
+        kp_strncpy(buf, "Session read error", maxlen);
+        break;
+    case KP_SESSION_CRC32_MISMATCH:
+        kp_strncpy(buf, "Session CRC32 mismatch", maxlen);
+        break;
+    case KP_SESSION_MSG_FINISH:
+        kp_strncpy(buf, "Session message finish", maxlen);
+        break;
 
     default:
         kp_strncpy(buf, "Unknown error", maxlen);

@@ -243,7 +243,7 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
             bytes_read_now = self->socket.read(&self->socket, (u8 *)&dat_sp + bytes_read, sizeof(dat_sp) - bytes_read);
 
             if (bytes_read_now <= 0)
-                return KP_FAIL;
+                return KP_SESSION_READ_ERROR;
 
             bytes_read += bytes_read_now;
         }
@@ -257,7 +257,7 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
         dat_sp.crc32 = 0;
 
         if (kp_crc32((u8 *)&dat_sp, sizeof(dat_sp)) != dat_crc32_temp)
-            return KP_SESSION_ERROR;
+            return KP_SESSION_CRC32_MISMATCH;
 
         dat_len_total = (dat_sp.len[0] << 16) | (dat_sp.len[1] << 8) | dat_sp.len[2];
         kp_memcpy(dat_mac_sp, dat_sp.mac, 16);
@@ -266,24 +266,28 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
         kp_sha256_init(&dat_sha256_ctx);
     }
 
-    /// Read data until buffer is full
+    /// Read data until buffer is full or dat_len_total is reached
     kp_size bytes_read = 0;
 
-    while (bytes_read < *length)
+    while (bytes_read < *length && dat_len_read < dat_len_total)
     {
         kp_size bytes_read_now = 0;
-        bytes_read_now = self->socket.read(&self->socket, (u8 *)buffer + bytes_read, *length - bytes_read);
+        kp_size bytes_to_read = *length - bytes_read;
 
-        if (bytes_read_now < 0)
-            return KP_FAIL;
+        if (dat_len_total - dat_len_read < bytes_to_read)
+            bytes_to_read = dat_len_total - dat_len_read;
+
+        bytes_read_now = self->socket.read(&self->socket, (u8 *)buffer + bytes_read, bytes_to_read);
 
         if (bytes_read_now == 0)
             break;
 
-        bytes_read += bytes_read_now;
-    }
+        if (bytes_read_now < 0)
+            return KP_SESSION_READ_ERROR;
 
-    dat_len_read += bytes_read;
+        bytes_read += bytes_read_now;
+        dat_len_read += bytes_read;
+    }
 
     kp_chacha20_xor(&self->cipher_ctx, (u8 *)buffer, bytes_read);
 
@@ -298,11 +302,11 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
         kp_sha256_final(&dat_sha256_ctx, sha256_full);
 
         if (kp_memcmp(sha256_full, dat_mac_sp, 16) != 0)
-            return KP_SESSION_ERROR;
+            return KP_SESSION_MAC_MISMATCH;
 
         first = TRUE;
         *length = bytes_read;
-        return KP_SUCCESS;
+        return KP_SESSION_MSG_FINISH;
     }
 
     return KP_SUCCESS;

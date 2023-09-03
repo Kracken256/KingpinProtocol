@@ -16,6 +16,11 @@ extern "C"
 #define KP_SESSION_VERSION_MISMATCH (0x02 << 10)
 #define KP_SESSION_PEER_ID_MISMATCH (0x03 << 10)
 #define KP_SESSION_PEER_NOT_ALLOWED (0x04 << 10)
+#define KP_SESSION_MAC_MISMATCH (0x05 << 10)
+#define KP_SESSION_CLOSED (0x06 << 10)
+#define KP_SESSION_READ_ERROR (0x07 << 10)
+#define KP_SESSION_CRC32_MISMATCH (0x08 << 10)
+#define KP_SESSION_MSG_FINISH (0x09 << 10)
 
     /// @brief The status of a function call
     /// @warning This status enum has success == 1 and fail == 0
