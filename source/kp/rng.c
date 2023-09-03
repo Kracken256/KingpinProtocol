@@ -22,12 +22,11 @@ static void kp_rng_reseed(const void *entropy, kp_size entropy_size)
 {
     u8 chacha20_key[32];
     u8 entropy256[32];
-    u64 chacha20_iv = 0;
+    u8 chacha_iv[32];
 
     kp_get_entropy(entropy256, 32);
 
-    /// Take advantage of ASLR
-    *(u64 *)&entropy256[0] ^= *(u64 *)&kp_rng_reseed + *(u64 *)entropy;
+    *(u64 *)entropy256 += (u64)(u64 *)&kp_rng_reseed;
 
     kp_sha256(entropy256, 32, entropy256);
 
@@ -38,14 +37,9 @@ static void kp_rng_reseed(const void *entropy, kp_size entropy_size)
     for (u8 i = 0; i < 32; i++)
         chacha20_key[i] ^= entropy256[i];
 
-    // kp_chacha_keysetup(&kp_rng.state_ctx, chacha20_key, 256);
-    // kp_chacha_ivsetup(&kp_rng.state_ctx, (u8 *)&chacha20_iv, NULL);
-
-    kp_chacha20_init_context(&kp_rng.state_ctx, chacha20_key, (u8 *)&chacha20_iv, 0);
+    kp_chacha20_init_context(&kp_rng.state_ctx, chacha20_key, chacha_iv, 0);
 
     kp_memset(kp_rng.buffer, 0, sizeof(kp_rng.buffer));
-
-    // kp_chacha_encrypt_bytes(&kp_rng.state_ctx, kp_rng.buffer, kp_rng.buffer, sizeof(kp_rng.buffer));
 
     kp_chacha20_xor(&kp_rng.state_ctx, kp_rng.buffer, sizeof(kp_rng.buffer));
 
@@ -66,7 +60,6 @@ static void kp_rng_update_buffer()
         if (sizeof(kp_rng.buffer) > 256)
             kp_memset(kp_rng.buffer, 0, 128);
 
-        // kp_chacha_encrypt_bytes(&kp_rng.state_ctx, kp_rng.buffer, kp_rng.buffer, sizeof(kp_rng.buffer));
         kp_chacha20_xor(&kp_rng.state_ctx, kp_rng.buffer, sizeof(kp_rng.buffer));
         kp_rng.index = 0;
         kp_rng.reseed_counter++;
