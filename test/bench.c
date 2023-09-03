@@ -10,8 +10,9 @@
 #include <time.h>
 #include <stdarg.h>
 
-#define REMOTE_ADDR "3.101.24.113"
+// #define REMOTE_ADDR "3.101.24.113"
 #define REMOTE_PORT 4444
+#define REMOTE_ADDR "0.0.0.0"
 
 void kp_bin2hex(const void *bin, kp_size bin_len, s8 *hex);
 
@@ -116,7 +117,9 @@ int main(int argc, char **argv)
     printf("|                Kingpin Protocol Tests                 |\n");
     printf("+=======================================================+\n\n");
 
-    time_t start = time(NULL);
+    time_t time_start;
+
+    time_start = time(NULL);
 
     /// Clear console
     if (system("clear") != 0)
@@ -192,12 +195,11 @@ int main(int argc, char **argv)
 
         double percent = (double)total_success / (double)total_requests * 100.0;
 
-        time_t now = time(NULL);
+        /// Calculate bitrate
+        double delta = (double)(time(NULL) - time_start);
+        double bitrate = (double)total_bytes_read / delta;
 
-        // /// Calculate bitrate
-        double bitrate = (double)total_bytes_read / (double)(now - start);
-
-        print_metrics(total_requests, total_requests - total_success, percent, bitrate, total_bytes_read, time(NULL) - start);
+        print_metrics(total_requests, total_requests - total_success, percent, bitrate, total_bytes_read, time(NULL) - time_start);
     }
 
     kp_library_deinit(0);

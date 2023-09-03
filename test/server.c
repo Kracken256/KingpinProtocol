@@ -122,7 +122,7 @@ int main(int argc, char **argv)
             kp_session_close(&session);
 
             kp_session_free(&session);
-            
+
             printf("fread failed\n");
             return 1;
         }
