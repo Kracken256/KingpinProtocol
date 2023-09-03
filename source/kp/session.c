@@ -5,7 +5,7 @@
 #include <kp/ec.h>
 #include <kp/types/proto-structs.h>
 #include <kp/core.h>
-#include <kp/checksum.h>
+#include <kp/hmac.h>
 #include <kp/str.h>
 #include <kp/cipher.h>
 
@@ -231,7 +231,8 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
     static kp_size dat_len_total = 0;
     static kp_size dat_len_read = 0;
     static u8 dat_mac_sp[16];
-    static kp_sha256_ctx dat_sha256_ctx;
+    // static kp_sha256_ctx dat_sha256_ctx;
+    static kp_hmac_sha256_ctx hmac_sha256_ctx;
 
     if (first)
     {
@@ -263,7 +264,7 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
         kp_memcpy(dat_mac_sp, dat_sp.mac, 16);
         dat_len_read = 0;
         first = FALSE;
-        kp_sha256_init(&dat_sha256_ctx);
+        kp_hmac_sha256_init(&hmac_sha256_ctx, self->keys.mac, 16);
     }
 
     /// Read data until buffer is full or dat_len_total is reached
@@ -293,7 +294,7 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
     {
         kp_chacha20_xor(&self->cipher_ctx, (u8 *)buffer, bytes_read);
 
-        kp_sha256_update(&dat_sha256_ctx, (u8 *)buffer, bytes_read);
+        kp_hmac_sha256_update(&hmac_sha256_ctx, (u8 *)buffer, bytes_read);
     }
 
     *length = bytes_read;
@@ -301,10 +302,10 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
     if (dat_len_read >= dat_len_total)
     {
         /// check MAC
-        u8 sha256_full[32];
-        kp_sha256_final(&dat_sha256_ctx, sha256_full);
+        u8 hmac_code[16];
+        kp_hmac_sha256_final(&hmac_sha256_ctx, hmac_code);
 
-        if (kp_memcmp(sha256_full, dat_mac_sp, 16) != 0)
+        if (kp_memcmp(hmac_code, dat_mac_sp, 16) != 0)
             return KP_SESSION_MAC_MISMATCH;
 
         first = TRUE;
@@ -326,10 +327,7 @@ kp_status kp_fn_write(kp_session *self, const void *buffer, kp_size length)
     dat_sp.len[1] = (length >> 8) & 0xFF;
     dat_sp.len[2] = length & 0xFF;
 
-    u8 sha256_full[32];
-    kp_sha256(buffer, length, sha256_full);
-
-    kp_memcpy(dat_sp.mac, sha256_full, 16);
+    kp_hmac_sha256(self->keys.mac, 16, buffer, length, dat_sp.mac);
 
     dat_sp.crc32 = kp_crc32((u8 *)&dat_sp, sizeof(dat_sp));
 
