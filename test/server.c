@@ -115,7 +115,17 @@ int main(int argc, char **argv)
             return 1;
         }
 
-        fread(file_buffer, 1, file_size, file);
+        if (fread(file_buffer, 1, file_size, file) != file_size)
+        {
+            fclose(file);
+            free(file_buffer);
+            kp_session_close(&session);
+
+            kp_session_free(&session);
+            
+            printf("fread failed\n");
+            return 1;
+        }
 
         fclose(file);
 

