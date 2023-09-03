@@ -88,21 +88,25 @@ int main(int argc, char **argv)
     printf("\n====================================================\n\n");
 
     kp_size total_bytes_read = 0;
-    kp_size total_size = 4096;
+    kp_size total_size = 4000;
     while (1)
     {
-        char buffer[127];
+        char buffer[873];
 
         char encoded[sizeof(buffer) * 2 + 1];
 
         kp_size len = (total_size - total_bytes_read) > sizeof(buffer) ? sizeof(buffer) : (total_size - total_bytes_read);
 
-        if (kp_session_read(&session, buffer, &len) != KP_SUCCESS || len == 0)
+        err = kp_session_read(&session, buffer, &len);
+        total_bytes_read += len;
+        if (err != KP_SUCCESS || len == 0)
         {
-            printf("read EOF\n");
+            kp_errstr(err, errstr, 30);
+
+            printf("read status: %s\n", errstr);
             break;
         }
-        total_bytes_read += len;
+
 
         printf("recv len: %lu\n", len);
 
