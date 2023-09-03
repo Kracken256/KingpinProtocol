@@ -231,7 +231,6 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
     static kp_size dat_len_total = 0;
     static kp_size dat_len_read = 0;
     static u8 dat_mac_sp[16];
-    // static kp_sha256_ctx dat_sha256_ctx;
     static kp_hmac_sha256_ctx hmac_sha256_ctx;
 
     if (first)
@@ -287,8 +286,9 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
             break;
 
         bytes_read += bytes_read_now;
-        dat_len_read += bytes_read_now;
     }
+
+    dat_len_read += bytes_read;
 
     if (bytes_read != 0)
     {
