@@ -8,9 +8,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define REMOTE_ADDR "3.101.24.113"
-#define REMOTE_PORT 4444
-
 void kp_bin2hex(const void *bin, kp_size bin_len, s8 *hex);
 void print_buffer(kp_buffer *buffer)
 {
@@ -37,6 +34,17 @@ kp_size rng_interface(u8 *bytes, kp_size size)
 
 int main(int argc, char **argv)
 {
+    char *REMOTE_ADDR;
+    u16 REMOTE_PORT;
+    if (argc != 3)
+    {
+        printf("Usage: %s <remote_addr> <remote_port>\n", argv[0]);
+        return 1;
+    }
+
+    REMOTE_ADDR = argv[1];
+    REMOTE_PORT = atoi(argv[2]);
+
     kp_dependency dep;
     kp_dependency_init(&dep);
     dep.kp_free_fn = free;

