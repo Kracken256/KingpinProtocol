@@ -46,13 +46,6 @@ extern "C"
         u8 pubkey[32];
     } __attribute((packed)) kp_proto_handshake_init_sp;
 
-    typedef struct _kp_proto_ack
-    {
-        u16 magic;
-        u16 flags;
-        u32 crc32;
-    } __attribute((packed)) kp_proto_ack_sp;
-
     typedef struct _kp_proto_handshake_resp
     {
         u16 magic;
@@ -65,6 +58,8 @@ extern "C"
         u16 magic;
         u8 flags;
         u8 len[3]; // 24-bit length 16 MB max
+        u8 mac[16];
+        u32 crc32;
     } __attribute((packed)) kp_proto_dat_sp;
 
     typedef struct _kp_proto_fin
@@ -72,6 +67,13 @@ extern "C"
         u16 magic;
         u16 flags;
     } __attribute((packed)) kp_proto_fin_sp;
+
+    typedef struct _kp_proto_ack
+    {
+        u16 magic;
+        u16 flags;
+        u32 crc32;
+    } __attribute((packed)) kp_proto_ack_sp;
 
 #ifdef __cplusplus
 }
