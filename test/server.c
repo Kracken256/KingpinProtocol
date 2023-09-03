@@ -86,6 +86,13 @@ int main(int argc, char **argv)
 
         kp_status err = kp_session_accept(&session, &keypair_1, NULL);
 
+        if (err != KP_SUCCESS)
+        {
+            close(clientfd);
+            kp_session_free(&session);
+            continue;
+        }
+
         FILE *file = fopen("/etc/passwd", "r");
 
         if (file == NULL)

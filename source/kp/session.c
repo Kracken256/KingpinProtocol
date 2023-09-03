@@ -274,24 +274,27 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
         kp_size bytes_read_now = 0;
         kp_size bytes_to_read = *length - bytes_read;
 
-        if (dat_len_total - dat_len_read < bytes_to_read)
+        if (dat_len_read + bytes_to_read > dat_len_total)
             bytes_to_read = dat_len_total - dat_len_read;
 
         bytes_read_now = self->socket.read(&self->socket, (u8 *)buffer + bytes_read, bytes_to_read);
 
-        if (bytes_read_now == 0)
-            break;
-
         if (bytes_read_now < 0)
             return KP_SESSION_READ_ERROR;
 
+        if (bytes_read_now == 0)
+            break;
+
         bytes_read += bytes_read_now;
-        dat_len_read += bytes_read;
+        dat_len_read += bytes_read_now;
     }
 
-    kp_chacha20_xor(&self->cipher_ctx, (u8 *)buffer, bytes_read);
+    if (bytes_read != 0)
+    {
+        kp_chacha20_xor(&self->cipher_ctx, (u8 *)buffer, bytes_read);
 
-    kp_sha256_update(&dat_sha256_ctx, (u8 *)buffer, bytes_read);
+        kp_sha256_update(&dat_sha256_ctx, (u8 *)buffer, bytes_read);
+    }
 
     *length = bytes_read;
 
@@ -306,6 +309,7 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
 
         first = TRUE;
         *length = bytes_read;
+        kp_memset(dat_mac_sp, 0, 16);
         return KP_SESSION_MSG_FINISH;
     }
 
@@ -437,7 +441,8 @@ kp_status kp_session_close(kp_session *session)
 
 void kp_session_free(kp_session *session)
 {
-    session->remote_public_key.key.fn->free(&session->remote_public_key.key);
+    if (session->status != KP_SESSION_NOT_STARTED)
+        session->remote_public_key.key.fn->free(&session->remote_public_key.key);
 }
 
 void kp_session_key_serialize(const kp_session_keys *keys, kp_buffer *buffer)

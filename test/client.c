@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
 void print_buffer(kp_buffer *buffer)
 {
@@ -60,7 +61,7 @@ int main(int argc, char **argv)
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
     addr.sin_port = htons(4444);
-    addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    addr.sin_addr.s_addr = inet_addr("54.153.6.21");
 
     if (connect(sockfd, (struct sockaddr *)&addr, sizeof(addr)) != 0)
     {
@@ -88,25 +89,24 @@ int main(int argc, char **argv)
     printf("\n====================================================\n\n");
 
     kp_size total_bytes_read = 0;
-    kp_size total_size = 4000;
     while (1)
     {
-        char buffer[873];
+        char buffer[100];
 
         char encoded[sizeof(buffer) * 2 + 1];
 
-        kp_size len = (total_size - total_bytes_read) > sizeof(buffer) ? sizeof(buffer) : (total_size - total_bytes_read);
+        kp_size len = sizeof(buffer);
 
         err = kp_session_read(&session, buffer, &len);
         total_bytes_read += len;
-        if (err != KP_SUCCESS || len == 0)
+
+        if (err != KP_SUCCESS && err != KP_SESSION_MSG_FINISH)
         {
             kp_errstr(err, errstr, 30);
 
             printf("read status: %s\n", errstr);
             break;
         }
-
 
         printf("recv len: %lu\n", len);
 
@@ -115,6 +115,11 @@ int main(int argc, char **argv)
         encoded[len * 2] = '\0';
 
         printf("recv (hex): %s\n", encoded);
+
+        if (err == KP_SESSION_MSG_FINISH)
+        {
+            break;
+        }
     }
 
     kp_session_close(&session);
