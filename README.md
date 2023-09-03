@@ -4,7 +4,7 @@ KingpinProtocol is a secure, lightweight, and versatile network protocol designe
 
 ## Key Features
 - **Security**: KingpinProtocol employs ECDH key exchange and ChaCha20-SHA256 encryption to ensure robust security and privacy for all communications.
-- **Efficiency**: With a small packet size and minimal overhead, KingpinProtocol is optimized for efficiency.
+- **Minimalism**: With a small packet size and minimal overhead, KingpinProtocol is optimized for minimalism.
 - **Flexibility**: Its design flexibility makes it easy to implement in any programming language or environment.
 - **Covert Communication**: KingpinProtocol excels in covert communications, featuring a compact packet size to minimize detection and the ability to seamlessly integrate with other protocols.
 - **Optional Mutual Authentication**: Supporting optional mutual authentication, it enables both parties to verify each other's identities using a list of trusted public keys.
