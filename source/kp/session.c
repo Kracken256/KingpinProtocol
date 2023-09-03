@@ -136,8 +136,7 @@ kp_status kp_fn_accept(kp_session *self, u8 flags, u32 id, const kp_ec_keypair *
     /// Derive keys
     self->keys = kp_session_derive_keys(keypair, &peer_public_key);
 
-    kp_chacha_keysetup((struct kp_chacha_ctx *)&self->cipher_ctx, self->keys.enc, 256);
-    kp_chacha_ivsetup((struct kp_chacha_ctx *)&self->cipher_ctx, self->keys.iv, NULL);
+    kp_chacha20_init_context(&self->cipher_ctx, self->keys.enc, self->keys.iv, 0);
 
     self->status = KP_SESSION_ESTABLISHED;
 
@@ -217,8 +216,7 @@ kp_status kp_fn_connect(kp_session *self, u8 flags, u32 id, const kp_ec_keypair 
     /// Derive keys
     self->keys = kp_session_derive_keys(keypair, &peer_public_key);
 
-    kp_chacha_keysetup((struct kp_chacha_ctx *)&self->cipher_ctx, self->keys.enc, 256);
-    kp_chacha_ivsetup((struct kp_chacha_ctx *)&self->cipher_ctx, self->keys.iv, NULL);
+    kp_chacha20_init_context(&self->cipher_ctx, self->keys.enc, self->keys.iv, 0);
 
     self->status = KP_SESSION_ESTABLISHED;
 
@@ -250,7 +248,7 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
             bytes_read += bytes_read_now;
         }
 
-        kp_chacha_encrypt_bytes((struct kp_chacha_ctx *)&self->cipher_ctx, (u8 *)&dat_sp, (u8 *)&dat_sp, sizeof(dat_sp));
+        kp_chacha20_xor(&self->cipher_ctx, (u8 *)&dat_sp, sizeof(dat_sp));
 
         if (dat_sp.magic != KP_PROTO_DAT_MAGIC)
             return KP_SESSION_MAGIC_MISMATCH;
@@ -287,9 +285,11 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
 
     dat_len_read += bytes_read;
 
-    kp_chacha_encrypt_bytes((struct kp_chacha_ctx *)&self->cipher_ctx, (u8 *)buffer, (u8 *)buffer, bytes_read);
+    kp_chacha20_xor(&self->cipher_ctx, (u8 *)buffer, bytes_read);
 
     kp_sha256_update(&dat_sha256_ctx, (u8 *)buffer, bytes_read);
+
+    *length = bytes_read;
 
     if (dat_len_read >= dat_len_total)
     {
@@ -301,7 +301,7 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
             return KP_SESSION_ERROR;
 
         first = TRUE;
-        *length = dat_len_read;
+        *length = bytes_read;
         return KP_SUCCESS;
     }
 
@@ -325,7 +325,7 @@ kp_status kp_fn_write(kp_session *self, const void *buffer, kp_size length)
 
     dat_sp.crc32 = kp_crc32((u8 *)&dat_sp, sizeof(dat_sp));
 
-    kp_chacha_encrypt_bytes((struct kp_chacha_ctx *)&self->cipher_ctx, (u8 *)&dat_sp, (u8 *)&dat_sp, sizeof(dat_sp));
+    kp_chacha20_xor(&self->cipher_ctx, (u8 *)&dat_sp, sizeof(dat_sp));
 
     kp_size bytes_written = 0;
 
@@ -342,7 +342,9 @@ kp_status kp_fn_write(kp_session *self, const void *buffer, kp_size length)
 
     void *buffer_copy = kp_alloc(length);
 
-    kp_chacha_encrypt_bytes((struct kp_chacha_ctx *)&self->cipher_ctx, (u8 *)buffer, (u8 *)buffer_copy, length);
+    kp_memcpy(buffer_copy, buffer, length);
+
+    kp_chacha20_xor(&self->cipher_ctx, (u8 *)buffer_copy, length);
 
     bytes_written = 0;
 
