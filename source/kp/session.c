@@ -7,6 +7,7 @@
 #include <kp/core.h>
 #include <kp/checksum.h>
 #include <kp/str.h>
+#include <kp/cipher.h>
 
 #include <kp/session.h>
 
@@ -135,6 +136,9 @@ kp_status kp_fn_accept(kp_session *self, u8 flags, u32 id, const kp_ec_keypair *
     /// Derive keys
     self->keys = kp_session_derive_keys(keypair, &peer_public_key);
 
+    kp_chacha_keysetup((struct kp_chacha_ctx *)&self->cipher_ctx, self->keys.enc, 256);
+    kp_chacha_ivsetup((struct kp_chacha_ctx *)&self->cipher_ctx, self->keys.iv, NULL);
+
     self->status = KP_SESSION_ESTABLISHED;
 
     return KP_SUCCESS;
@@ -213,6 +217,9 @@ kp_status kp_fn_connect(kp_session *self, u8 flags, u32 id, const kp_ec_keypair 
     /// Derive keys
     self->keys = kp_session_derive_keys(keypair, &peer_public_key);
 
+    kp_chacha_keysetup((struct kp_chacha_ctx *)&self->cipher_ctx, self->keys.enc, 256);
+    kp_chacha_ivsetup((struct kp_chacha_ctx *)&self->cipher_ctx, self->keys.iv, NULL);
+
     self->status = KP_SESSION_ESTABLISHED;
 
     return KP_SUCCESS;
@@ -220,12 +227,139 @@ kp_status kp_fn_connect(kp_session *self, u8 flags, u32 id, const kp_ec_keypair 
 
 kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
 {
-    return KP_NOT_IMPLEMENTED;
+    kp_proto_dat_sp dat_sp;
+
+    static boolean first = TRUE;
+    static kp_size dat_len_total = 0;
+    static kp_size dat_len_read = 0;
+    static u8 dat_mac_sp[16];
+    static kp_sha256_ctx dat_sha256_ctx;
+
+    if (first)
+    {
+        kp_size bytes_read = 0;
+
+        while (bytes_read < sizeof(dat_sp))
+        {
+            kp_size bytes_read_now = 0;
+            bytes_read_now = self->socket.read(&self->socket, (u8 *)&dat_sp + bytes_read, sizeof(dat_sp) - bytes_read);
+
+            if (bytes_read_now <= 0)
+                return KP_FAIL;
+
+            bytes_read += bytes_read_now;
+        }
+
+        kp_chacha_encrypt_bytes((struct kp_chacha_ctx *)&self->cipher_ctx, (u8 *)&dat_sp, (u8 *)&dat_sp, sizeof(dat_sp));
+
+        if (dat_sp.magic != KP_PROTO_DAT_MAGIC)
+            return KP_SESSION_MAGIC_MISMATCH;
+
+        u32 dat_crc32_temp = dat_sp.crc32;
+        dat_sp.crc32 = 0;
+
+        if (kp_crc32((u8 *)&dat_sp, sizeof(dat_sp)) != dat_crc32_temp)
+            return KP_SESSION_ERROR;
+
+        dat_len_total = (dat_sp.len[0] << 16) | (dat_sp.len[1] << 8) | dat_sp.len[2];
+        kp_memcpy(dat_mac_sp, dat_sp.mac, 16);
+        dat_len_read = 0;
+        first = FALSE;
+        kp_sha256_init(&dat_sha256_ctx);
+    }
+
+    /// Read data until buffer is full
+    kp_size bytes_read = 0;
+
+    while (bytes_read < *length)
+    {
+        kp_size bytes_read_now = 0;
+        bytes_read_now = self->socket.read(&self->socket, (u8 *)buffer + bytes_read, *length - bytes_read);
+
+        if (bytes_read_now < 0)
+            return KP_FAIL;
+
+        if (bytes_read_now == 0)
+            break;
+
+        bytes_read += bytes_read_now;
+    }
+
+    dat_len_read += bytes_read;
+
+    kp_chacha_encrypt_bytes((struct kp_chacha_ctx *)&self->cipher_ctx, (u8 *)buffer, (u8 *)buffer, bytes_read);
+
+    kp_sha256_update(&dat_sha256_ctx, (u8 *)buffer, bytes_read);
+
+    if (dat_len_read >= dat_len_total)
+    {
+        /// check MAC
+        u8 sha256_full[32];
+        kp_sha256_final(&dat_sha256_ctx, sha256_full);
+
+        if (kp_memcmp(sha256_full, dat_mac_sp, 16) != 0)
+            return KP_SESSION_ERROR;
+
+        first = TRUE;
+        *length = dat_len_read;
+        return KP_SUCCESS;
+    }
+
+    return KP_SUCCESS;
 }
 
 kp_status kp_fn_write(kp_session *self, const void *buffer, kp_size length)
 {
-    return KP_NOT_IMPLEMENTED;
+    kp_proto_dat_sp dat_sp;
+    dat_sp.flags = 0;
+    dat_sp.magic = KP_PROTO_DAT_MAGIC;
+    dat_sp.crc32 = 0;
+    dat_sp.len[0] = (length >> 16) & 0xFF;
+    dat_sp.len[1] = (length >> 8) & 0xFF;
+    dat_sp.len[2] = length & 0xFF;
+
+    u8 sha256_full[32];
+    kp_sha256(buffer, length, sha256_full);
+
+    kp_memcpy(dat_sp.mac, sha256_full, 16);
+
+    dat_sp.crc32 = kp_crc32((u8 *)&dat_sp, sizeof(dat_sp));
+
+    kp_chacha_encrypt_bytes((struct kp_chacha_ctx *)&self->cipher_ctx, (u8 *)&dat_sp, (u8 *)&dat_sp, sizeof(dat_sp));
+
+    kp_size bytes_written = 0;
+
+    while (bytes_written < sizeof(dat_sp))
+    {
+        kp_size bytes_written_now = 0;
+        bytes_written_now = self->socket.write(&self->socket, (u8 *)&dat_sp + bytes_written, sizeof(dat_sp) - bytes_written);
+
+        if (bytes_written_now <= 0)
+            return KP_FAIL;
+
+        bytes_written += bytes_written_now;
+    }
+
+    void *buffer_copy = kp_alloc(length);
+
+    kp_chacha_encrypt_bytes((struct kp_chacha_ctx *)&self->cipher_ctx, (u8 *)buffer, (u8 *)buffer_copy, length);
+
+    bytes_written = 0;
+
+    while (bytes_written < length)
+    {
+        kp_size bytes_written_now = 0;
+        bytes_written_now = self->socket.write(&self->socket, (u8 *)buffer_copy + bytes_written, length - bytes_written);
+
+        if (bytes_written_now <= 0)
+            return KP_FAIL;
+
+        bytes_written += bytes_written_now;
+    }
+
+    kp_free(buffer_copy);
+
+    return KP_SUCCESS;
 }
 
 kp_status kp_fn_session_close(kp_session *self)

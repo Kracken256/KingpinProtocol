@@ -80,14 +80,11 @@ kp_socket kp_socket_i2c_create()
 int main(int argc, char **argv)
 {
     kp_dependency dep;
+    kp_dependency_init(&dep);
     dep.kp_free_fn = free;
     dep.kp_malloc_fn = malloc;
     dep.kp_realloc_fn = realloc;
     dep.kp_get_entropy_fn = rng_interface;
-    dep.kp_memcmp_fn = NULL;
-    dep.kp_memcpy_fn = NULL;
-    dep.kp_memmove_fn = NULL;
-    dep.kp_memset_fn = NULL;
 
     srand(time(NULL));
 
@@ -143,7 +140,7 @@ int main(int argc, char **argv)
 
         printf("err: %s\n", errstr);
 
-        // kp_session_write(&session, "Hello, world!", 13);
+        kp_session_write(&session, "Hello, world!", 14);
 
         printf("enc: ");
         print_buffer_raw(session.keys.enc, 32);
@@ -189,6 +186,14 @@ int main(int argc, char **argv)
         print_buffer_raw(session.keys.iv, 16);
         printf("mac: ");
         print_buffer_raw(session.keys.mac, 16);
+
+        char buffer[20];
+
+        kp_size len = 20;
+
+        kp_session_read(&session, buffer, &len);
+
+        printf("read: %s\n", buffer);
 
         kp_session_close(&session);
 
