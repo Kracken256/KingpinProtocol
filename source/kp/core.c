@@ -1,7 +1,6 @@
 #define __KINGPIN_BACKEND
 
 #include <kp/core.h>
-#include <stdarg.h>
 
 /// @brief Global configuration for Kingpin.
 kp_dependency gKP_dependency_config;
