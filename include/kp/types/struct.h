@@ -82,11 +82,6 @@ extern "C"
         kp_size (*kp_get_entropy_fn)(u8 *buffer, kp_size buffer_size);
     } kp_dependency;
 
-    typedef struct _kp_uninit
-    {
-
-    } kp_uninit;
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus

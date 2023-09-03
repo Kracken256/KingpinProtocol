@@ -57,6 +57,10 @@ extern "C"
         kp_status (*close)(kp_session *self);
     } kp_session_fn;
 
+    typedef struct _kp_session_cipher_ctx {
+        u32 input[16];
+    } kp_session_cipher_ctx;
+
     typedef struct _kp_session
     {
         u8 flags;
@@ -66,6 +70,8 @@ extern "C"
         kp_session_keys keys;
         kp_session_status status;
         kp_socket socket;
+
+        kp_session_cipher_ctx cipher_ctx;
 
         const kp_session_fn *fn;
     } kp_session;
