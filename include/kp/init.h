@@ -10,13 +10,23 @@ extern "C"
 #error "Do not include this file directly. Include kingpin.h instead."
 #endif // __KINGPIN_H_
 
-#include <kp/types/basic.h>
 #include <kp/types/struct.h>
 #include <kp/types/err.h>
 
+    /// @brief Initializes the Kingpin library
+    /// @param dependency The dependency structure to use
+    /// @return KP_SUCCESS on success, an error code otherwise
+    /// @warning The library uses dynamic memory allocation internally, so
+    /// make sure to call the `kp_library_deinit` function when you are done.
     kp_status kp_library_init(const kp_dependency *dependency);
 
-    kp_status kp_library_deinit(const kp_uninit *uninit_mode);
+    /// @brief Initializes a dependency structure with default values
+    /// @param dependency The dependency structure to initialize
+    void kp_dependency_init(kp_dependency *dependency);
+
+    /// @brief Deinitializes the Kingpin library
+    /// @return KP_SUCCESS on success, an error code otherwise
+    kp_status kp_library_deinit();
 
 #ifdef __cplusplus
 }

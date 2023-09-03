@@ -79,7 +79,19 @@ exit:
     return status;
 }
 
-kp_status kp_library_deinit(const kp_uninit *uninit_mode)
+void kp_dependency_init(kp_dependency *dependency)
+{
+    dependency->kp_free_fn = NULL;
+    dependency->kp_malloc_fn = NULL;
+    dependency->kp_realloc_fn = NULL;
+    dependency->kp_get_entropy_fn = NULL;
+    dependency->kp_memcmp_fn = NULL;
+    dependency->kp_memcpy_fn = NULL;
+    dependency->kp_memmove_fn = NULL;
+    dependency->kp_memset_fn = NULL;
+}
+
+kp_status kp_library_deinit()
 {
     kp_library_buffer_deinit();
 
