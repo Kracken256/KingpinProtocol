@@ -10,7 +10,7 @@ void kp_errstr(kp_status err, char *buf, kp_size maxlen)
 
     buf[0] = '\0';
 
-    switch (err)
+    switch ((u64)err)
     {
     case KP_SUCCESS:
         kp_strncpy(buf, "Success", maxlen);

@@ -22,10 +22,10 @@ extern "C"
     typedef struct _kp_socket
     {
         /// @brief Read data from the socket into a buffer.
-        kp_size (*read)(struct _kp_socket *socket, void *buffer, kp_size size);
+        kp_ssize (*read)(struct _kp_socket *socket, void *buffer, kp_size size);
 
         /// @brief Write data to the socket from a buffer.
-        kp_size (*write)(struct _kp_socket *socket, const void *buffer, kp_size size);
+        kp_ssize (*write)(struct _kp_socket *socket, const void *buffer, kp_size size);
 
         /// @brief Close the socket.
         s32 (*close)(struct _kp_socket *socket);

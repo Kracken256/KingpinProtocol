@@ -35,6 +35,6 @@ void kp_hmac_sha256_final(kp_hmac_sha256_ctx *ctx, u8 digest[16]);
 /// @param m Message
 /// @param msgsize Message size
 /// @param output 16-byte output buffer for the digest
-void kp_hmac_sha256(const u8 key[16], kp_size keylen, const u8 *m, kp_size msgsize, u8 digest[16]);
+void kp_hmac_sha256(const u8 key[], kp_size keylen, const u8 *m, kp_size msgsize, u8 digest[16]);
 
 #endif /* __KINGPIN_HMAC_H_ */

@@ -23,7 +23,7 @@ extern "C"
     typedef unsigned long u64;
 
     /// @brief Signed 8-bit integer
-    typedef signed char s8;
+    typedef char s8;
 
     /// @brief Signed 16-bit integer
     typedef signed short s16;
@@ -45,6 +45,8 @@ extern "C"
 
     /// @brief Standard size type
     typedef u64 kp_size;
+
+    typedef s64 kp_ssize;
 
     #define KP_UINT64_MAX 0xFFFFFFFFFFFFFFFF
 

@@ -272,7 +272,7 @@ kp_status kp_fn_read(kp_session *self, void *buffer, kp_size *length)
 
     while (bytes_read < *length && dat_len_read < dat_len_total)
     {
-        kp_size bytes_read_now = 0;
+        kp_ssize bytes_read_now = 0;
         kp_size bytes_to_read = *length - bytes_read;
 
         if (dat_len_read + bytes_to_read > dat_len_total)
@@ -453,16 +453,16 @@ void kp_session_key_serialize(const kp_session_keys *keys, kp_buffer *buffer)
     buffer->fn->set_sensitive(buffer, TRUE);
 
     /// Hex encode the keys
-    kp_bin2hex(keys->enc, 32, buffer->data);
-    kp_bin2hex(keys->iv, 16, buffer->data + 64);
-    kp_bin2hex(keys->mac, 16, buffer->data + 96);
+    kp_bin2hex(keys->enc, 32, (s8 *)buffer->data);
+    kp_bin2hex(keys->iv, 16, (s8 *)buffer->data + 64);
+    kp_bin2hex(keys->mac, 16, (s8 *)buffer->data + 96);
 
     buffer->data[key_serial_size - 1] = '\0';
 }
 
 void kp_session_key_deserialize(kp_session_keys *keys, const kp_buffer *buffer)
 {
-    kp_hex2bin(buffer->data, 64, keys->enc);
-    kp_hex2bin(buffer->data + 64, 32, keys->iv);
-    kp_hex2bin(buffer->data + 96, 32, keys->mac);
+    kp_hex2bin((s8 *)buffer->data, 64, keys->enc);
+    kp_hex2bin((s8 *)buffer->data + 64, 32, keys->iv);
+    kp_hex2bin((s8 *)buffer->data + 96, 32, keys->mac);
 }

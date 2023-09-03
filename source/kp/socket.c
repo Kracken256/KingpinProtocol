@@ -11,12 +11,12 @@ static s32 kp_socket_close(kp_socket *socket)
     return close(socket->socket_fd);
 }
 
-static kp_size kp_socket_read(kp_socket *socket, void *buffer, kp_size size)
+static kp_ssize kp_socket_read(kp_socket *socket, void *buffer, kp_size size)
 {
     return read(socket->socket_fd, buffer, size);
 }
 
-static kp_size kp_socket_write(kp_socket *socket, const void *buffer, kp_size size)
+static kp_ssize kp_socket_write(kp_socket *socket, const void *buffer, kp_size size)
 {
     return write(socket->socket_fd, buffer, size);
 }
@@ -45,12 +45,12 @@ static s32 kp_socket_close(kp_socket *socket)
     return close(socket->socket_fd);
 }
 
-static kp_size kp_socket_read_raw(kp_socket *socket, void *buffer, kp_size size)
+static kp_ssize kp_socket_read_raw(kp_socket *socket, void *buffer, kp_size size)
 {
     return recv(socket->socket_fd, buffer, size, 0);
 }
 
-static kp_size kp_socket_write(kp_socket *socket, kp_buffer *buffer)
+static kp_ssize kp_socket_write(kp_socket *socket, kp_buffer *buffer)
 {
     return send(socket->socket_fd, buffer->data, buffer->size, 0);
 }
