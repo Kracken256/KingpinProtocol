@@ -36,14 +36,16 @@ int main(int argc, char **argv)
 {
     char *REMOTE_ADDR;
     u16 REMOTE_PORT;
-    if (argc != 3)
+    char *FILE_EXFIL_OUT;
+    if (argc != 4)
     {
-        printf("Usage: %s <remote_addr> <remote_port>\n", argv[0]);
+        printf("Usage: %s <remote_addr> <remote_port> <outfile>\n", argv[0]);
         return 1;
     }
 
     REMOTE_ADDR = argv[1];
     REMOTE_PORT = atoi(argv[2]);
+    FILE_EXFIL_OUT = argv[3];
 
     kp_dependency dep;
     kp_dependency_init(&dep);
@@ -101,6 +103,8 @@ int main(int argc, char **argv)
     printf("Message Auth Code (MAC): 0x");
     print_buffer_raw(session.keys.mac, 16);
 
+    FILE *fp = fopen(FILE_EXFIL_OUT, "wb");
+
     printf("\n====================================================\n\n");
 
     kp_size total_bytes_read = 0;
@@ -136,12 +140,16 @@ int main(int argc, char **argv)
 
         printf("recv (hex): %s\n", encoded);
 
+        fwrite(buffer, 1, len, fp);
+
         if (err == KP_SESSION_MSG_FINISH)
         {
             total_success++;
             break;
         }
     }
+
+    fclose(fp);
 
     kp_session_close(&session);
 
