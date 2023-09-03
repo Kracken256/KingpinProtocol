@@ -10,15 +10,24 @@ extern "C"
 #error "Do not include this file directly. Include kingpin.h instead."
 #endif // __KINGPIN_H_
 
+#include <kp/types/ec-types.h>
+
+    void kp_x25519_generate_keypair(kp_ec_keypair *keypair);
+
+    void kp_ec_keypair_free(kp_ec_keypair *keypair);
+
+#ifdef __KINGPIN_BACKEND
+
 #include <kp/types/basic.h>
 #include <kp/types/struct.h>
 #include <kp/types/err.h>
-#include <kp/types/ec-types.h>
 
 #define KP_SHA256_DIGEST_SIZE 32
 #define KP_ECDH_SECRET_SIZE 32
 
-    void kp_x25519_generate_keypair(kp_ec_keypair *keypair);
+    kp_status kp_library_ec_init(void);
+
+    void kp_ec_keypair_copy(kp_ec_keypair *dst, const kp_ec_keypair *src);
 
     void kp_x25519_derive_public_key(const kp_ec_private_key *private_key, kp_ec_public_key *public_key);
 
@@ -35,13 +44,6 @@ extern "C"
     void kp_ed25519_sign(const kp_ec_keypair *keypair, const kp_buffer *message, kp_ecdsa_signature *signature);
 
     boolean kp_ed25519_verify(const kp_ec_public_key *public_key, const kp_buffer *message, const kp_ecdsa_signature *signature);
-
-    void kp_ec_keypair_free(kp_ec_keypair *keypair);
-
-#ifdef __KINGPIN_BACKEND
-    kp_status kp_library_ec_init(void);
-
-    void kp_ec_keypair_copy(kp_ec_keypair *dst, const kp_ec_keypair *src);
 
 #endif // __KINGPIN_BACKEND
 
