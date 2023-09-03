@@ -4,10 +4,10 @@ project(Kindpin C)
 # CMAKE Do not use standard libs
 set(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "")
 
-# CMAKE Do not use standard PATH
 set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES "")
 
-find_library(LIBEDDSA_STATIC eddsa-static PATHS /usr/local/lib REQUIRED)
+# Project uses libeddsa found at https://github.com/phlay/libeddsa.git
+find_library(LIBEDDSA_STATIC eddsa-static REQUIRED)
 
 set(CMAKE_CXX_FLAGS "-m64 -std=c99 -g -nostdlib -fno-builtin -Wall -Wextra -Wno-unused-parameter -I${CMAKE_SOURCE_DIR}/include -O3 -nodefaultlibs -leddsa")
 

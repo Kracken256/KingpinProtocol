@@ -29,3 +29,14 @@ For those seeking to reduce the detection rate, it is possible to apply a mask t
 
 ## License
 KingpinProtocol is distributed under the GPLv3 license. For more details, please refer to the `LICENSE.md` file.
+
+## Build
+To build the library, download, build, and install the libeddsa library from [here](https://github.com/phlay/libeddsa.git). Then, run the following commands:
+```bash
+cd your/path/to/KingpinProtocol
+mkdir build
+cd build
+cmake ..
+make
+```
+
