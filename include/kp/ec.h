@@ -39,7 +39,7 @@ extern "C"
     void kp_ec_keypair_free(kp_ec_keypair *keypair);
 
 #ifdef __KINGPIN_BACKEND
-    kp_status kp_ec_init(void);
+    kp_status kp_library_ec_init(void);
 
     void kp_ec_keypair_copy(kp_ec_keypair *dst, const kp_ec_keypair *src);
 

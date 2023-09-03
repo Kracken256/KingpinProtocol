@@ -11,20 +11,20 @@ Public domain.
 
 #include <kp/types/kp.h>
 
-struct chacha_ctx
+struct kp_chacha_ctx
 {
     u32 input[16];
 };
 
-#define CHACHA_MINKEYLEN 16
-#define CHACHA_NONCELEN 8
-#define CHACHA_CTRLEN 8
-#define CHACHA_STATELEN (CHACHA_NONCELEN + CHACHA_CTRLEN)
-#define CHACHA_BLOCKLEN 64
+#define KP_CHACHA_MINKEYLEN 16
+#define KP_CHACHA_NONCELEN 8
+#define KP_CHACHA_CTRLEN 8
+#define KP_CHACHA_STATELEN (KP_CHACHA_NONCELEN + KP_CHACHA_CTRLEN)
+#define KP_CHACHA_BLOCKLEN 64
 
-void chacha_keysetup(struct chacha_ctx *x, const u8 *k, u32 kbits);
-void chacha_ivsetup(struct chacha_ctx *x, const u8 *iv, const u8 *ctr);
-void chacha_encrypt_bytes(struct chacha_ctx *x, const u8 *m, u8 *c,
+void kp_chacha_keysetup(struct kp_chacha_ctx *x, const u8 *k, u32 kbits);
+void kp_chacha_ivsetup(struct kp_chacha_ctx *x, const u8 *iv, const u8 *ctr);
+void kp_chacha_encrypt_bytes(struct kp_chacha_ctx *x, const u8 *m, u8 *c,
                           u32 bytes);
 
 #endif /* CHACHA_H */
