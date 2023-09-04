@@ -1,6 +1,6 @@
 #define __KINGPIN_BACKEND
 
-#include <kp/checksum.h>
+#include "checksum.h"
 
 /// Public domain SHA256 implementation https://github.com/983/SHA-256
 

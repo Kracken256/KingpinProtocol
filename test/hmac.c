@@ -1,4 +1,4 @@
-#include <kingpin.h>
+#include "kingpin.h"
 
 /*
 Tested against:
@@ -9,11 +9,11 @@ https://gchq.github.io/CyberChef/#recipe=HMAC(%7B'option':'Hex','string':'000000
 */
 
 #define __KINGPIN_BACKEND
-#include <kp/hmac.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/random.h>
+#include "hmac.h"
+#include "string.h"
+#include "stdio.h"
+#include "stdlib.h"
+#include "sys/random.h"
 
 kp_size rng_interface(u8 *bytes, kp_size size)
 {

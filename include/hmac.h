@@ -5,8 +5,8 @@
 #error "Do not include this file directly. Only backend .c files should do so."
 #endif // __KINGPIN_BACKEND
 
-#include <kp/types/kp.h>
-#include <kp/checksum.h>
+#include "kp.h"
+#include "checksum.h"
 
 typedef struct _kp_hmac_sha256_ctx
 {

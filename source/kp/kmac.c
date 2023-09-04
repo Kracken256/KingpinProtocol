@@ -1,7 +1,7 @@
 #define __KINGPIN_BACKEND
 
-#include <kp/hmac.h>
-#include <kp/core.h>
+#include "hmac.h"
+#include "core.h"
 
 void kp_hmac_sha256_init(kp_hmac_sha256_ctx *ctx, const u8 key[], kp_size keylen)
 {

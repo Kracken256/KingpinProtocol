@@ -1,13 +1,13 @@
-#include <kp/types/kp.h>
+#include "kp.h"
 
 #define __KINGPIN_BACKEND
 
-#include <kingpin.h>
-#include <kp/core.h>
-#include <kp/buffer.h>
-#include <kp/ec.h>
-#include <kp/rng.h>
-#include <kp/str.h>
+#include "kingpin.h"
+#include "core.h"
+#include "buffer.h"
+#include "ec.h"
+#include "rng.h"
+#include "str.h"
 
 static boolean kp_dep_check(const kp_dependency *d);
 

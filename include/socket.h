@@ -10,10 +10,10 @@ extern "C"
 {
 #endif // __cplusplus
 
-#include <kp/types/err.h>
+#include "err.h"
 
 #ifdef _WIN32
-#include <winsock2.h>
+#include "winsock2.h"
 #endif // _WIN32
 
     typedef struct _kp_socket kp_socket;

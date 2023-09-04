@@ -1,6 +1,6 @@
 #define __KINGPIN_BACKEND
 
-#include <kp/str.h>
+#include "str.h"
 
 void kp_library_str_init(void)
 {

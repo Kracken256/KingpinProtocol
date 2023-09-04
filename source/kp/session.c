@@ -1,15 +1,15 @@
 
 
 #define __KINGPIN_BACKEND
-#include <kp/proto.h>
-#include <kp/ec.h>
-#include <kp/types/proto-structs.h>
-#include <kp/core.h>
-#include <kp/hmac.h>
-#include <kp/str.h>
-#include <kp/cipher.h>
+#include "proto.h"
+#include "ec.h"
+#include "proto-structs.h"
+#include "core.h"
+#include "hmac.h"
+#include "str.h"
+#include "cipher.h"
 
-#include <kp/session.h>
+#include "session.h"
 
 static kp_session_fn gSessionFunctions;
 

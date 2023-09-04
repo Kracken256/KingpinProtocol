@@ -10,8 +10,8 @@ extern "C"
 #error "Do not include this file directly. Include kingpin.h instead."
 #endif // __KINGPIN_H_
 
-#include <kp/types/struct.h>
-#include <kp/types/err.h>
+#include "struct.h"
+#include "err.h"
 
     /// @brief Initializes the Kingpin library
     /// @param dependency The dependency structure to use

@@ -1,7 +1,7 @@
 #define __KINGPIN_BACKEND
 
-#include <kp/errstr.h>
-#include <kp/core.h>
+#include "errstr.h"
+#include "core.h"
 
 void kp_errstr(kp_status err, char *buf, kp_size maxlen)
 {

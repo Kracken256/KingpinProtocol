@@ -10,8 +10,8 @@ extern "C"
 {
 #endif // __cplusplus
 
-#include <kp/types/basic.h>
-#include <kp/buffer.h>
+#include "basic.h"
+#include "buffer.h"
 
     typedef enum _kp_ec_curve
     {

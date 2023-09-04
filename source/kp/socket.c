@@ -1,10 +1,10 @@
 #define __KINGPIN_BACKEND
 
-#include <kp/socket.h>
+#include "socket.h"
 
 #if defined(__linux__) || defined(__APPLE__)
 
-#include <unistd.h>
+#include "unistd.h"
 
 static s32 kp_socket_close(kp_socket *socket)
 {
@@ -38,7 +38,7 @@ kp_socket kp_socket_wrap(s32 socket_fd)
 
 #if defined(_WIN32)
 
-#include <winsock2.h>
+#include "winsock2.h"
 
 static s32 kp_socket_close(kp_socket *socket)
 {

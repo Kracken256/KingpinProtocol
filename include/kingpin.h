@@ -6,17 +6,17 @@ extern "C"
 {
 #endif // __cplusplus
 
-#include <kp/types/kp.h>
-#include <kp/types/ec-types.h>
-#include <kp/types/err.h>
+#include "kp.h"
+#include "ec-types.h"
+#include "err.h"
 
-#include <kp/init.h>
-#include <kp/proto.h>
-#include <kp/buffer.h>
-#include <kp/ec.h>
-#include <kp/socket.h>
-#include <kp/session.h>
-#include <kp/errstr.h>
+#include "init.h"
+#include "proto.h"
+#include "buffer.h"
+#include "ec.h"
+#include "socket.h"
+#include "session.h"
+#include "errstr.h"
 
 #ifdef __cplusplus
 }

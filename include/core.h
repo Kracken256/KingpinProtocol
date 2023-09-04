@@ -10,7 +10,7 @@ extern "C"
 {
 #endif // __cplusplus
 
-#include <kp/types/kp.h>
+#include "kp.h"
 
     void *kp_alloc(kp_size size);
 

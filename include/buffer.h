@@ -10,7 +10,7 @@ extern "C"
 #error "Do not include this file directly. Include kingpin.h instead."
 #endif // __KINGPIN_H_
 
-#include <kp/types/basic.h>
+#include "basic.h"
 
 #define KP_BUFFER_FLAG_SENSITIVE 0x01
 

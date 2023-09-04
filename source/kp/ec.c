@@ -1,11 +1,11 @@
 #define __KINGPIN_BACKEND
 
-#include <kp/ec.h>
-#include <eddsa.h>
-#include <kp/buffer.h>
-#include <kp/rng.h>
-#include <kp/checksum.h>
-#include <kp/core.h>
+#include "ec.h"
+#include "eddsa.h"
+#include "buffer.h"
+#include "rng.h"
+#include "checksum.h"
+#include "core.h"
 
 kp_status kp_library_ec_init(void)
 {

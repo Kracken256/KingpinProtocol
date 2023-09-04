@@ -1,8 +1,8 @@
 
 #define __KINGPIN_BACKEND
 
-#include <kp/buffer.h>
-#include <kp/core.h>
+#include "buffer.h"
+#include "core.h"
 
 /// @brief List of sensitive buffers.
 static kp_buffer **kp_buf_sensitive_list = NULL;

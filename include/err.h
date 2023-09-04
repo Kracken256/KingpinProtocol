@@ -10,7 +10,7 @@ extern "C"
 #error "Do not include this file directly. Include types/kp.h instead."
 #endif // __KINGPIN_KP_H_
 
-#include <kp/types/basic.h>
+#include "basic.h"
 
 #define KP_SESSION_MAGIC_MISMATCH (0x01 << 10)
 #define KP_SESSION_VERSION_MISMATCH (0x02 << 10)

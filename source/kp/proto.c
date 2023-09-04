@@ -1,10 +1,10 @@
 #define __KINGPIN_BACKEND
 
-#include <kp/proto.h>
-#include <kp/core.h>
-#include <kp/ec.h>
-#include <kp/types/proto-structs.h>
-#include <kp/checksum.h>
+#include "proto.h"
+#include "core.h"
+#include "ec.h"
+#include "proto-structs.h"
+#include "checksum.h"
 
 kp_status kp_syn_init_msg(kp_buffer *buffer, u32 id, const kp_ec_keypair *keypair)
 {

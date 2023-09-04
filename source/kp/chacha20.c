@@ -1,7 +1,7 @@
-#include <kp/cipher/chacha20.h>
+#include "chacha20.h"
 
 #define __KINGPIN_BACKEND
-#include <kp/core.h>
+#include "core.h"
 
 static u32 rotl32(u32 x, int n)
 {

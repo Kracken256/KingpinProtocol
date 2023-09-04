@@ -10,7 +10,7 @@ extern "C"
 #error "Do not include this file directly. Include kingpin.h instead."
 #endif // __KINGPIN_H_
 
-#include <kp/types/kp.h>
+#include "kp.h"
 
     void kp_errstr(kp_status err, char *buf, kp_size maxlen);
 

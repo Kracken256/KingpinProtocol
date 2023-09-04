@@ -10,7 +10,7 @@ extern "C"
 #error "Do not include this file directly. Include kingpin.h instead."
 #endif // __KINGPIN_H_
 
-#include <kp/types/ec-types.h>
+#include "ec-types.h"
 
     void kp_x25519_generate_keypair(kp_ec_keypair *keypair);
 
@@ -18,9 +18,9 @@ extern "C"
 
 #ifdef __KINGPIN_BACKEND
 
-#include <kp/types/basic.h>
-#include <kp/types/struct.h>
-#include <kp/types/err.h>
+#include "basic.h"
+#include "struct.h"
+#include "err.h"
 
 #define KP_SHA256_DIGEST_SIZE 32
 #define KP_ECDH_SECRET_SIZE 32

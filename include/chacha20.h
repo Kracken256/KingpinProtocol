@@ -1,6 +1,6 @@
 #pragma once
 
-#include <kp/types/kp.h>
+#include "kp.h"
 
 #ifdef __cplusplus 
 extern "C" {

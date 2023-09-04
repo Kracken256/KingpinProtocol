@@ -1,13 +1,13 @@
-#include <kingpin.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/random.h>
+#include "kingpin.h"
+#include "stdlib.h"
+#include "string.h"
+#include "time.h"
+#include "unistd.h"
+#include "stdio.h"
+#include "sys/socket.h"
+#include "netinet/in.h"
+#include "arpa/inet.h"
+#include "sys/random.h"
 
 kp_size rng_interface(u8 *bytes, kp_size size)
 {

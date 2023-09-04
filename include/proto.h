@@ -10,9 +10,9 @@ extern "C"
 {
 #endif // __cplusplus
 
-#include <kp/types/err.h>
-#include <kp/buffer.h>
-#include <kp/types/ec-types.h>
+#include "err.h"
+#include "buffer.h"
+#include "ec-types.h"
 
     /// @brief Initialize a Kingpin protocol connect message buffer
     /// @param msg The buffer to store the message in

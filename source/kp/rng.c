@@ -1,9 +1,9 @@
 #define __KINGPIN_BACKEND
 
-#include <kp/rng.h>
-#include <kp/core.h>
-#include <kp/cipher/chacha20.h>
-#include <kp/checksum.h>
+#include "rng.h"
+#include "core.h"
+#include "chacha20.h"
+#include "checksum.h"
 
 #define KP_RNG_RESEED_INTERVAL 100
 #define KP_RNG_BUFFER_SIZE 4096

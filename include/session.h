@@ -10,11 +10,11 @@ extern "C"
 {
 #endif // __cplusplus
 
-#include <kp/types/err.h>
-#include <kp/buffer.h>
-#include <kp/types/ec-types.h>
-#include <kp/socket.h>
-#include <kp/cipher/chacha20.h>
+#include "err.h"
+#include "buffer.h"
+#include "ec-types.h"
+#include "socket.h"
+#include "chacha20.h"
 
     typedef struct _kp_session_keys
     {

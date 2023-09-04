@@ -10,9 +10,9 @@ extern "C"
 #error "Do not include this file directly."
 #endif // !defined(__KINGPIN_BACKEND)
 
-#include <kp/types/basic.h>
+#include "basic.h"
 
-#include <kp/cipher/chacha20.h>
+#include "chacha20.h"
 
 #ifdef __cplusplus
 }
